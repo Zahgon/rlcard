@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
-''' Implement Mahjong Judger class
-'''
 from collections import defaultdict
 import numpy as np
 
 class MahjongJudger:
-    ''' Determine what cards a player can play
-    '''
 
     def __init__(self, np_random):
         ''' Initilize the Judger class for Mahjong
@@ -24,18 +20,13 @@ class MahjongJudger:
         '''
         last_card = dealer.table[-1]
         last_card_str = last_card.get_str()
-        #last_card_value = last_card_str.split("-")[-1]
-        #last_card_type = last_card_str.split("-")[0]
         for player in players:
             hand = [card.get_str() for card in player.hand]
             hand_dict = defaultdict(list)
             for card in hand:
                 hand_dict[card.split("-")[0]].append(card.split("-")[1])
-            #pile = player.pile
-            # check gong
             if hand.count(last_card_str) == 3 and last_player != player.player_id:
                 return 'gong', player, [last_card]*4
-            # check pong
             if hand.count(last_card_str) == 2 and last_player != player.player_id:
                 return 'pong', player, [last_card]*3
         return False, None, None
@@ -54,18 +45,12 @@ class MahjongJudger:
         last_card_index = last_card.index_num
         for player in players:
             if last_card_type != "dragons" and last_card_type != "winds" and last_player == player.get_player_id() - 1:
-                # Create 9 dimensional vector where each dimension represent a specific card with the type same as last_card_type
-                # Numbers in each dimension represent how many of that card the player has it in hand
-                # If the last_card_type is 'characters' for example, and the player has cards: characters_3, characters_6, characters_3,
-                # The hand_list vector looks like: [0,0,2,0,0,1,0,0,0]
                 hand_list = np.zeros(9)
 
                 for card in player.hand:
                     if card.get_str().split("-")[0] == last_card_type:
                         hand_list[card.index_num] = hand_list[card.index_num]+1
 
-                #pile = player.pile
-                #check chow
                 test_cases = []
                 if last_card_index == 0:
                     if hand_list[last_card_index+1] > 0 and hand_list[last_card_index+2] > 0:
@@ -108,7 +93,6 @@ class MahjongJudger:
         if win_player != -1 or len(game.dealer.deck) == 0:
             return True, win_player, players_val
         else:
-            #player_id = players_val.index(max(players_val))
             return False, win_player, players_val
 
     def judge_hu(self, player):
@@ -141,10 +125,6 @@ class MahjongJudger:
                 if tmp_set_count + set_count > maximum:
                     maximum = tmp_set_count + set_count
                 if tmp_set_count + set_count >= 4:
-                    #print(player.get_player_id(), sorted([card.get_str() for card in player.hand]))
-                    #print([[c.get_str() for c in s] for s in player.pile])
-                    #print(len(player.hand), sum([len(s) for s in player.pile]))
-                    #exit()
                     return True, maximum
         return False, maximum
 
@@ -175,14 +155,12 @@ class MahjongJudger:
         sets = []
         set_count = 0
         _dict = {card: tmp_cards.count(card) for card in tmp_cards}
-        # check pong/gang
         for each in _dict:
             if _dict[each] == 3 or _dict[each] == 4:
                 set_count += 1
                 for _ in range(_dict[each]):
                     tmp_cards.pop(tmp_cards.index(each))
 
-        # get all of the traits of each type in hand (except dragons and winds)
         _dict_by_type = defaultdict(list)
         for card in tmp_cards:
             _type = card.split("-")[0]
@@ -211,17 +189,3 @@ class MahjongJudger:
                                 tmp_cards.pop(tmp_cards.index(c))
         return set_count, sets
 
-#if __name__ == "__main__":
-#    judger = MahjongJudger()
-#    player = Player(0)
-#    card_info = Card.info
-#    #print(card_info)
-#    player.pile.append([Card(card_info['type'][0], card_info['trait'][0])]*3)
-#    #player.hand.extend([Card(card_info['type'][0], card_info['trait'][0])]*2)
-#    player.hand.extend([Card(card_info['type'][1], card_info['trait'][1])]*4)
-#    player.hand.extend([Card(card_info['type'][2], card_info['trait'][1])]*3)
-#    player.hand.extend([Card(card_info['type'][0], card_info['trait'][2])]*3)
-#    player.hand.extend([Card(card_info['type'][3], card_info['trait'][9])]*2)
-#    #player.hand.extend([Card(card_info['type'][2], card_info['trait'][4])]*1)
-#    print([card.get_str() for card in player.hand])
-#    print(judger.judge_hu(player))

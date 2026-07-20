@@ -2,8 +2,6 @@ from rlcard.games.mahjong.utils import init_deck
 
 
 class MahjongDealer:
-    ''' Initialize a mahjong dealer class
-    '''
     def __init__(self, np_random):
         self.np_random = np_random
         self.deck = init_deck()
@@ -26,9 +24,3 @@ class MahjongDealer:
             player.hand.append(self.deck.pop())
 
 
-## For test
-#if __name__ == '__main__':
-#    dealer = MahjongDealer()
-#    for card in dealer.deck:
-#        print(card.get_str())
-#    print(len(dealer.deck))

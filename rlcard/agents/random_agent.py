@@ -2,8 +2,6 @@ import numpy as np
 
 
 class RandomAgent(object):
-    ''' A random agent. Random agents is for running toy examples on the card games
-    '''
 
     def __init__(self, num_actions):
         ''' Initilize the random agent

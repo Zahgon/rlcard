@@ -1,8 +1,3 @@
-'''
-    File name: gin_rummy/player.py
-    Author: William Hale
-    Date created: 2/12/2020
-'''
 
 from typing import List
 
@@ -25,7 +20,6 @@ class GinRummyPlayer:
         self.player_id = player_id
         self.hand = []  # type: List[Card]
         self.known_cards = []  # type: List[Card]  # opponent knows cards picked up by player and not yet discarded
-        # memoization for speed
         self.meld_kinds_by_rank_id = [[] for _ in range(13)]  # type: List[List[List[Card]]]
         self.meld_run_by_suit_id = [[] for _ in range(4)]  # type: List[List[List[Card]]]
 
@@ -88,13 +82,12 @@ class GinRummyPlayer:
 
     @staticmethod
     def short_name_of(player_id: int) -> str:
-        return "N" if player_id == 0 else "S"
+        pass
 
     @staticmethod
     def opponent_id_of(player_id: int) -> int:
-        return (player_id + 1) % 2
+        pass
 
-    # private methods
 
     def _increase_meld_kinds_by_rank_id(self, card: Card):
         rank_id = utils.get_rank_id(card)

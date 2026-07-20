@@ -1,11 +1,6 @@
 from rlcard.utils import *
 
 class Env(object):
-    '''
-    The base Env class. For all the environments in RLCard,
-    we should base on this class and implement as many functions
-    as we can.
-    '''
     def __init__(self, config):
         ''' Initialize the environment
 
@@ -27,9 +22,6 @@ class Env(object):
         self.allow_step_back = self.game.allow_step_back = config['allow_step_back']
         self.action_recorder = []
 
-        # Game specific configurations
-        # Currently only support blackjack、limit-holdem、no-limit-holdem
-        # TODO support game configurations for all the games
         supported_envs = ['blackjack', 'leduc-holdem', 'limit-holdem', 'no-limit-holdem']
         if self.name in supported_envs:
             _game_config = self.default_game_config.copy()
@@ -38,14 +30,11 @@ class Env(object):
                     _game_config[key] = config[key]
             self.game.configure(_game_config)
 
-        # Get the number of players/actions in this game
         self.num_players = self.game.get_num_players()
         self.num_actions = self.game.get_num_actions()
 
-        # A counter for the timesteps
         self.timestep = 0
 
-        # Set random seed, default is None
         self.seed(config['seed'])
 
 
@@ -79,43 +68,16 @@ class Env(object):
             action = self._decode_action(action)
 
         self.timestep += 1
-        # Record the action for human interface
         self.action_recorder.append((self.get_player_id(), action))
         next_state, player_id = self.game.step(action)
 
         return self._extract_state(next_state), player_id
 
     def step_back(self):
-        ''' Take one step backward.
-
-        Returns:
-            (tuple): Tuple containing:
-
-                (dict): The previous state
-                (int): The ID of the previous player
-
-        Note: Error will be raised if step back from the root node.
-        '''
-        if not self.allow_step_back:
-            raise Exception('Step back is off. To use step_back, please set allow_step_back=True in rlcard.make')
-
-        if not self.game.step_back():
-            return False
-
-        player_id = self.get_player_id()
-        state = self.get_state(player_id)
-
-        return state, player_id
+        pass
 
     def set_agents(self, agents):
-        '''
-        Set the agents that will interact with the environment.
-        This function must be called before `run`.
-
-        Args:
-            agents (list): List of Agent classes
-        '''
-        self.agents = agents
+        pass
 
     def run(self, is_training=False):
         '''
@@ -136,34 +98,26 @@ class Env(object):
         trajectories = [[] for _ in range(self.num_players)]
         state, player_id = self.reset()
 
-        # Loop to play the game
         trajectories[player_id].append(state)
         while not self.is_over():
-            # Agent plays
             if not is_training:
                 action, _ = self.agents[player_id].eval_step(state)
             else:
                 action = self.agents[player_id].step(state)
 
-            # Environment steps
             next_state, next_player_id = self.step(action, self.agents[player_id].use_raw)
-            # Save action
             trajectories[player_id].append(action)
 
-            # Set the state and player
             state = next_state
             player_id = next_player_id
 
-            # Save state.
             if not self.game.is_over():
                 trajectories[player_id].append(state)
 
-        # Add a final state to all the players
         for player_id in range(self.num_players):
             state = self.get_state(player_id)
             trajectories[player_id].append(state)
 
-        # Payoffs
         payoffs = self.get_payoffs()
 
         return trajectories, payoffs
@@ -215,20 +169,10 @@ class Env(object):
         raise NotImplementedError
 
     def get_action_feature(self, action):
-        ''' For some environments such as DouDizhu, we can have action features
-
-        Returns:
-            (numpy.array): The action features
-        '''
-        # By default we use one-hot encoding
-        feature = np.zeros(self.num_actions, dtype=np.int8)
-        feature[action] = 1
-        return feature
+        pass
 
     def seed(self, seed=None):
-        self.np_random, seed = seeding.np_random(seed)
-        self.game.np_random = self.np_random
-        return seed
+        pass
 
     def _extract_state(self, state):
         ''' Extract useful information from state for RL. Must be implemented in the child class.

@@ -1,23 +1,4 @@
-# Copyright 2019 Matthew Judell. All rights reserved.
-# Copyright 2019 DATA Lab at Texas A&M University. All rights reserved.
-# Copyright 2019 DeepMind Technologies Ltd. All rights reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#         http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 
-''' Neural Fictitious Self-Play (NFSP) agent implemented in TensorFlow.
-
-See the paper https://arxiv.org/abs/1603.01121 for more details.
-'''
 
 import random
 import collections
@@ -33,12 +14,6 @@ from rlcard.utils.utils import remove_illegal
 Transition = collections.namedtuple('Transition', 'info_state action_probs')
 
 class NFSPAgent(object):
-    ''' An approximate clone of rlcard.agents.nfsp_agent that uses
-    pytorch instead of tensorflow.  Note that this implementation
-    differs from Henrich and Silver (2016) in that the supervised
-    training minimizes cross-entropy with respect to the stored
-    action probabilities rather than the realized actions.
-    '''
 
     def __init__(self,
                  num_actions=4,
@@ -110,52 +85,24 @@ class NFSPAgent(object):
         else:
             self.device = device
 
-        # Total timesteps
         self.total_t = 0
 
-        # Step counter to keep track of learning.
         self._step_counter = 0
 
-        # Build the action-value network
         self._rl_agent = DQNAgent(q_replay_memory_size, q_replay_memory_init_size, \
             q_update_target_estimator_every, q_discount_factor, q_epsilon_start, q_epsilon_end, \
             q_epsilon_decay_steps, q_batch_size, num_actions, state_shape, q_train_every, q_mlp_layers, \
             rl_learning_rate, device)
 
-        # Build the average policy supervised model
         self._build_model()
 
         self.sample_episode_policy()
 
     def _build_model(self):
-        ''' Build the average policy network
-        '''
-
-        # configure the average policy network
-        policy_network = AveragePolicyNetwork(self._num_actions, self._state_shape, self._layer_sizes)
-        policy_network = policy_network.to(self.device)
-        self.policy_network = policy_network
-        self.policy_network.eval()
-
-        # xavier init
-        for p in self.policy_network.parameters():
-            if len(p.data.shape) > 1:
-                nn.init.xavier_uniform_(p.data)
-
-        # configure optimizer
-        self.policy_network_optimizer = torch.optim.Adam(self.policy_network.parameters(), lr=self._sl_learning_rate)
+        pass
 
     def feed(self, ts):
-        ''' Feed data to inner RL agent
-
-        Args:
-            ts (list): A list of 5 elements that represent the transition.
-        '''
-        self._rl_agent.feed(ts)
-        self.total_t += 1
-        if self.total_t>0 and len(self._reservoir_buffer) >= self._min_buffer_size_to_learn and self.total_t%self._train_every == 0:
-            sl_loss  = self.train_sl()
-            print('\rINFO - Step {}, sl-loss: {}'.format(self.total_t, sl_loss), end='')
+        pass
 
     def step(self, state):
         ''' Returns the action to be taken.
@@ -206,12 +153,7 @@ class NFSPAgent(object):
         return action, info
 
     def sample_episode_policy(self):
-        ''' Sample average/best_response policy
-        '''
-        if np.random.rand() < self._anticipatory_param:
-            self._mode = 'best_response'
-        else:
-            self._mode = 'average_policy'
+        pass
 
     def _act(self, info_state):
         ''' Predict action probability givin the observation and legal actions
@@ -247,53 +189,12 @@ class NFSPAgent(object):
         self._reservoir_buffer.add(transition)
 
     def train_sl(self):
-        ''' Compute the loss on sampled transitions and perform a avg-network update.
-
-        If there are not enough elements in the buffer, no loss is computed and
-        `None` is returned instead.
-
-        Returns:
-            loss (float): The average loss obtained on this batch of transitions or `None`.
-        '''
-        if (len(self._reservoir_buffer) < self._batch_size or
-                len(self._reservoir_buffer) < self._min_buffer_size_to_learn):
-            return None
-
-        transitions = self._reservoir_buffer.sample(self._batch_size)
-        info_states = [t.info_state for t in transitions]
-        action_probs = [t.action_probs for t in transitions]
-
-        self.policy_network_optimizer.zero_grad()
-        self.policy_network.train()
-
-        # (batch, state_size)
-        info_states = torch.from_numpy(np.array(info_states)).float().to(self.device)
-
-        # (batch, num_actions)
-        eval_action_probs = torch.from_numpy(np.array(action_probs)).float().to(self.device)
-
-        # (batch, num_actions)
-        log_forecast_action_probs = self.policy_network(info_states)
-
-        ce_loss = - (eval_action_probs * log_forecast_action_probs).sum(dim=-1).mean()
-        ce_loss.backward()
-
-        self.policy_network_optimizer.step()
-        ce_loss = ce_loss.item()
-        self.policy_network.eval()
-
-        return ce_loss
+        pass
 
     def set_device(self, device):
-        self.device = device
-        self._rl_agent.set_device(device)
+        pass
 
 class AveragePolicyNetwork(nn.Module):
-    '''
-    Approximates the history of action probabilities
-    given state (average policy). Forward pass returns
-    log probabilities of actions.
-    '''
 
     def __init__(self, num_actions=2, state_shape=None, mlp_layers=None):
         ''' Initialize the policy network.  It's just a bunch of ReLU
@@ -311,7 +212,6 @@ class AveragePolicyNetwork(nn.Module):
         self.state_shape = state_shape
         self.mlp_layers = mlp_layers
 
-        # set up mlp w/ relu activations
         layer_dims = [np.prod(self.state_shape)] + self.mlp_layers
         mlp = [nn.Flatten()]
         mlp.append(nn.BatchNorm1d(layer_dims[0]))
@@ -335,13 +235,6 @@ class AveragePolicyNetwork(nn.Module):
         return log_action_probs
 
 class ReservoirBuffer(object):
-    ''' Allows uniform sampling over a stream of data.
-
-    This class supports the storage of arbitrary elements, such as observation
-    tensors, integer actions, etc.
-
-    See https://en.wikipedia.org/wiki/Reservoir_sampling for more details.
-    '''
 
     def __init__(self, reservoir_buffer_capacity):
         ''' Initialize the buffer.
@@ -365,27 +258,10 @@ class ReservoirBuffer(object):
         self._add_calls += 1
 
     def sample(self, num_samples):
-        ''' Returns `num_samples` uniformly sampled from the buffer.
-
-        Args:
-            num_samples (int): The number of samples to draw.
-
-        Returns:
-            An iterable over `num_samples` random elements of the buffer.
-
-        Raises:
-            ValueError: If there are less than `num_samples` elements in the buffer
-        '''
-        if len(self._data) < num_samples:
-            raise ValueError("{} elements could not be sampled from size {}".format(
-                    num_samples, len(self._data)))
-        return random.sample(self._data, num_samples)
+        pass
 
     def clear(self):
-        ''' Clear the buffer
-        '''
-        self._data = []
-        self._add_calls = 0
+        pass
 
     def __len__(self):
         return len(self._data)

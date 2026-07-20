@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
-"""Limit texas holdem round class implementation"""
 
 
 class LimitHoldemRound:
-    """Round can call other Classes' functions to keep the game running"""
 
     def __init__(self, raise_amount, allowed_raise_num, num_players, np_random):
         """
@@ -21,14 +19,10 @@ class LimitHoldemRound:
 
         self.num_players = num_players
 
-        # Count the number of raise
         self.have_raised = 0
 
-        # Count the number without raise
-        # If every player agree to not raise, the round is over
         self.not_raise_num = 0
 
-        # Raised amount for each player
         self.raised = [0 for _ in range(self.num_players)]
         self.player_folded = None
 
@@ -86,7 +80,6 @@ class LimitHoldemRound:
 
         self.game_pointer = (self.game_pointer + 1) % self.num_players
 
-        # Skip the folded players
         while players[self.game_pointer].status == 'folded':
             self.game_pointer = (self.game_pointer + 1) % self.num_players
 
@@ -101,15 +94,12 @@ class LimitHoldemRound:
         """
         full_actions = ['call', 'raise', 'fold', 'check']
 
-        # If the the number of raises already reaches the maximum number raises, we can not raise any more
         if self.have_raised >= self.allowed_raise_num:
             full_actions.remove('raise')
 
-        # If the current chips are less than that of the highest one in the round, we can not check
         if self.raised[self.game_pointer] < max(self.raised):
             full_actions.remove('check')
 
-        # If the current player has put in the chips that are more than others, we can not call
         if self.raised[self.game_pointer] == max(self.raised):
             full_actions.remove('call')
 

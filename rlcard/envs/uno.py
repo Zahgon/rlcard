@@ -40,8 +40,6 @@ class UnoEnv(Env):
         legal_ids = self._get_legal_actions()
         if action_id in legal_ids:
             return ACTION_LIST[action_id]
-        # if (len(self.game.dealer.deck) + len(self.game.round.played_cards)) > 17:
-        #    return ACTION_LIST[60]
         return ACTION_LIST[np.random.choice(legal_ids)]
 
     def _get_legal_actions(self):
@@ -50,18 +48,4 @@ class UnoEnv(Env):
         return OrderedDict(legal_ids)
 
     def get_perfect_information(self):
-        ''' Get the perfect information of the current state
-
-        Returns:
-            (dict): A dictionary of all the perfect information of the current state
-        '''
-        state = {}
-        state['num_players'] = self.num_players
-        state['hand_cards'] = [cards2list(player.hand)
-                               for player in self.game.players]
-        state['played_cards'] = cards2list(self.game.round.played_cards)
-        state['target'] = self.game.round.target.str
-        state['current_player'] = self.game.round.current_player
-        state['legal_actions'] = self.game.round.get_legal_actions(
-            self.game.players, state['current_player'])
-        return state
+        pass

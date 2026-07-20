@@ -1,29 +1,3 @@
-''' DQN agent
-
-The code is derived from https://github.com/dennybritz/reinforcement-learning/blob/master/DQN/dqn.py
-
-Copyright (c) 2019 Matthew Judell
-Copyright (c) 2019 DATA Lab at Texas A&M University
-Copyright (c) 2016 Denny Britz
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-'''
 
 import random
 import numpy as np
@@ -38,10 +12,6 @@ Transition = namedtuple('Transition', ['state', 'action', 'reward', 'next_state'
 
 
 class DQNAgent(object):
-    '''
-    Approximate clone of rlcard.agents.dqn_agent.DQNAgent
-    that depends on PyTorch instead of Tensorflow
-    '''
     def __init__(self,
                  replay_memory_size=20000,
                  replay_memory_init_size=100,
@@ -91,44 +61,26 @@ class DQNAgent(object):
         self.num_actions = num_actions
         self.train_every = train_every
 
-        # Torch device
         if device is None:
             self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
         else:
             self.device = device
 
-        # Total timesteps
         self.total_t = 0
 
-        # Total training step
         self.train_t = 0
 
-        # The epsilon decay scheduler
         self.epsilons = np.linspace(epsilon_start, epsilon_end, epsilon_decay_steps)
 
-        # Create estimators
         self.q_estimator = Estimator(num_actions=num_actions, learning_rate=learning_rate, state_shape=state_shape, \
             mlp_layers=mlp_layers, device=self.device)
         self.target_estimator = Estimator(num_actions=num_actions, learning_rate=learning_rate, state_shape=state_shape, \
             mlp_layers=mlp_layers, device=self.device)
 
-        # Create replay memory
         self.memory = Memory(replay_memory_size, batch_size)
 
     def feed(self, ts):
-        ''' Store data in to replay buffer and train the agent. There are two stages.
-            In stage 1, populate the memory without training
-            In stage 2, train the agent every several timesteps
-
-        Args:
-            ts (list): a list of 5 elements that represent the transition
-        '''
-        (state, action, reward, next_state, done) = tuple(ts)
-        self.feed_memory(state['obs'], action, reward, next_state['obs'], list(next_state['legal_actions'].keys()), done)
-        self.total_t += 1
-        tmp = self.total_t - self.replay_memory_init_size
-        if tmp>=0 and tmp%self.train_every == 0:
-            self.train()
+        pass
 
     def step(self, state):
         ''' Predict the action for genrating training data but
@@ -186,67 +138,15 @@ class DQNAgent(object):
         return masked_q_values
 
     def train(self):
-        ''' Train the network
-
-        Returns:
-            loss (float): The loss of the current batch.
-        '''
-        state_batch, action_batch, reward_batch, next_state_batch, legal_actions_batch, done_batch = self.memory.sample()
-
-        # Calculate best next actions using Q-network (Double DQN)
-        q_values_next = self.q_estimator.predict_nograd(next_state_batch)
-        legal_actions = []
-        for b in range(self.batch_size):
-            legal_actions.extend([i + b * self.num_actions for i in legal_actions_batch[b]])
-        masked_q_values = -np.inf * np.ones(self.num_actions * self.batch_size, dtype=float)
-        masked_q_values[legal_actions] = q_values_next.flatten()[legal_actions]
-        masked_q_values = masked_q_values.reshape((self.batch_size, self.num_actions))
-        best_actions = np.argmax(masked_q_values, axis=1)
-
-        # Evaluate best next actions using Target-network (Double DQN)
-        q_values_next_target = self.target_estimator.predict_nograd(next_state_batch)
-        target_batch = reward_batch + np.invert(done_batch).astype(np.float32) * \
-            self.discount_factor * q_values_next_target[np.arange(self.batch_size), best_actions]
-
-        # Perform gradient descent update
-        state_batch = np.array(state_batch)
-
-        loss = self.q_estimator.update(state_batch, action_batch, target_batch)
-        print('\rINFO - Step {}, rl-loss: {}'.format(self.total_t, loss), end='')
-
-        # Update the target estimator
-        if self.train_t % self.update_target_estimator_every == 0:
-            self.target_estimator = deepcopy(self.q_estimator)
-            print("\nINFO - Copied model parameters to target network.")
-
-        self.train_t += 1
+        pass
 
     def feed_memory(self, state, action, reward, next_state, legal_actions, done):
-        ''' Feed transition to memory
-
-        Args:
-            state (numpy.array): the current state
-            action (int): the performed action ID
-            reward (float): the reward received
-            next_state (numpy.array): the next state after performing the action
-            legal_actions (list): the legal actions of the next state
-            done (boolean): whether the episode is finished
-        '''
-        self.memory.save(state, action, reward, next_state, legal_actions, done)
+        pass
 
     def set_device(self, device):
-        self.device = device
-        self.q_estimator.device = device
-        self.target_estimator.device = device
+        pass
 
 class Estimator(object):
-    '''
-    Approximate clone of rlcard.agents.dqn_agent.Estimator that
-    uses PyTorch instead of Tensorflow.  All methods input/output np.ndarray.
-
-    Q-Value Estimator neural network.
-    This network is used for both the Q-Network and the Target Network.
-    '''
 
     def __init__(self, num_actions=2, learning_rate=0.001, state_shape=None, mlp_layers=None, device=None):
         ''' Initilalize an Estimator object.
@@ -263,21 +163,17 @@ class Estimator(object):
         self.mlp_layers = mlp_layers
         self.device = device
 
-        # set up Q model and place it in eval mode
         qnet = EstimatorNetwork(num_actions, state_shape, mlp_layers)
         qnet = qnet.to(self.device)
         self.qnet = qnet
         self.qnet.eval()
 
-        # initialize the weights using Xavier init
         for p in self.qnet.parameters():
             if len(p.data.shape) > 1:
                 nn.init.xavier_uniform_(p.data)
 
-        # set up loss function
         self.mse_loss = nn.MSELoss(reduction='mean')
 
-        # set up optimizer
         self.optimizer =  torch.optim.Adam(self.qnet.parameters(), lr=self.learning_rate)
 
     def predict_nograd(self, s):
@@ -298,48 +194,10 @@ class Estimator(object):
         return q_as
 
     def update(self, s, a, y):
-        ''' Updates the estimator towards the given targets.
-            In this case y is the target-network estimated
-            value of the Q-network optimal actions, which
-            is labeled y in Algorithm 1 of Minh et al. (2015)
-
-        Args:
-          s (np.ndarray): (batch, state_shape) state representation
-          a (np.ndarray): (batch,) integer sampled actions
-          y (np.ndarray): (batch,) value of optimal actions according to Q-target
-
-        Returns:
-          The calculated loss on the batch.
-        '''
-        self.optimizer.zero_grad()
-
-        self.qnet.train()
-
-        s = torch.from_numpy(s).float().to(self.device)
-        a = torch.from_numpy(a).long().to(self.device)
-        y = torch.from_numpy(y).float().to(self.device)
-
-        # (batch, state_shape) -> (batch, num_actions)
-        q_as = self.qnet(s)
-
-        # (batch, num_actions) -> (batch, )
-        Q = torch.gather(q_as, dim=-1, index=a.unsqueeze(-1)).squeeze(-1)
-
-        # update model
-        batch_loss = self.mse_loss(Q, y)
-        batch_loss.backward()
-        self.optimizer.step()
-        batch_loss = batch_loss.item()
-
-        self.qnet.eval()
-
-        return batch_loss
+        pass
 
 
 class EstimatorNetwork(nn.Module):
-    ''' The function approximation network for Estimator
-        It is just a series of tanh layers. All in/out are torch.tensor
-    '''
 
     def __init__(self, num_actions=2, state_shape=None, mlp_layers=None):
         ''' Initialize the Q network
@@ -355,7 +213,6 @@ class EstimatorNetwork(nn.Module):
         self.state_shape = state_shape
         self.mlp_layers = mlp_layers
 
-        # build the Q network
         layer_dims = [np.prod(self.state_shape)] + self.mlp_layers
         fc = [nn.Flatten()]
         fc.append(nn.BatchNorm1d(layer_dims[0]))
@@ -374,8 +231,6 @@ class EstimatorNetwork(nn.Module):
         return self.fc_layers(s)
 
 class Memory(object):
-    ''' Memory for saving transitions
-    '''
 
     def __init__(self, memory_size, batch_size):
         ''' Initialize
@@ -387,30 +242,7 @@ class Memory(object):
         self.memory = []
 
     def save(self, state, action, reward, next_state, legal_actions, done):
-        ''' Save transition into memory
-
-        Args:
-            state (numpy.array): the current state
-            action (int): the performed action ID
-            reward (float): the reward received
-            next_state (numpy.array): the next state after performing the action
-            legal_actions (list): the legal actions of the next state
-            done (boolean): whether the episode is finished
-        '''
-        if len(self.memory) == self.memory_size:
-            self.memory.pop(0)
-        transition = Transition(state, action, reward, next_state, legal_actions, done)
-        self.memory.append(transition)
+        pass
 
     def sample(self):
-        ''' Sample a minibatch from the replay memory
-
-        Returns:
-            state_batch (list): a batch of states
-            action_batch (list): a batch of actions
-            reward_batch (list): a batch of rewards
-            next_state_batch (list): a batch of states
-            done_batch (list): a batch of dones
-        '''
-        samples = random.sample(self.memory, self.batch_size)
-        return map(np.array, zip(*samples))
+        pass

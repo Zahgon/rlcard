@@ -3,30 +3,10 @@ import numpy as np
 from rlcard.games.base import Card
 
 def set_seed(seed):
-    if seed is not None:
-        import subprocess
-        import sys
-
-        reqs = subprocess.check_output([sys.executable, '-m', 'pip', 'freeze'])
-        installed_packages = [r.decode().split('==')[0] for r in reqs.split()]
-        if 'torch' in installed_packages:
-            import torch
-            torch.backends.cudnn.deterministic = True
-            torch.manual_seed(seed)
-        np.random.seed(seed)
-        import random
-        random.seed(seed)
+    pass
 
 def get_device():
-    import torch
-    if torch.cuda.is_available():
-        device = torch.device("cuda:0")
-        print("--> Running on the GPU")
-    else:
-        device = torch.device("cpu")
-        print("--> Running on the CPU")
-
-    return device    
+    pass
 
 def init_standard_deck():
     ''' Initialize a standard deck of 52 cards
@@ -222,27 +202,5 @@ def tournament(env, num):
     return payoffs
 
 def plot_curve(csv_path, save_path, algorithm):
-    ''' Read data from csv file and plot the results
-    '''
-    import os
-    import csv
-    import matplotlib.pyplot as plt
-    with open(csv_path) as csvfile:
-        reader = csv.DictReader(csvfile)
-        xs = []
-        ys = []
-        for row in reader:
-            xs.append(int(row['timestep']))
-            ys.append(float(row['reward']))
-        fig, ax = plt.subplots()
-        ax.plot(xs, ys, label=algorithm)
-        ax.set(xlabel='timestep', ylabel='reward')
-        ax.legend()
-        ax.grid()
-
-        save_dir = os.path.dirname(save_path)
-        if not os.path.exists(save_dir):
-            os.makedirs(save_dir)
-
-        fig.savefig(save_path)
+    pass
 

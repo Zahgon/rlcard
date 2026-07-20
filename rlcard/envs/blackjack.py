@@ -10,8 +10,6 @@ DEFAULT_GAME_CONFIG = {
         }
 
 class BlackjackEnv(Env):
-    ''' Blackjack Environment
-    '''
 
     def __init__(self, config):
         ''' Initialize the Blackjack environment

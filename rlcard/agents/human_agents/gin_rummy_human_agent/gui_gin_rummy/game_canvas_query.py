@@ -1,11 +1,4 @@
-'''
-    Project: Gui Gin Rummy
-    File name: game_canvas.query.py
-    Author: William Hale
-    Date created: 3/14/2020
-'''
 
-# from __future__ import annotations
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .game_canvas import GameCanvas
@@ -58,9 +51,7 @@ class GameCanvasQuery(object):
         return len(draw_card_actions) > 0
 
     def can_draw_from_discard_pile(self, player_id: int) -> bool:
-        legal_actions = self.game_canvas.getter.get_legal_actions(player_id=player_id)
-        pick_up_discard_actions = [x for x in legal_actions if isinstance(x, PickUpDiscardAction)]
-        return len(pick_up_discard_actions) > 0
+        pass
 
     def can_declare_dead_hand(self, player_id: int) -> bool:
         legal_actions = self.game_canvas.getter.get_legal_actions(player_id=player_id)
@@ -83,22 +74,13 @@ class GameCanvasQuery(object):
         return len(gin_actions) > 0
 
     def is_top_discard_pile_item_drawn(self) -> bool:
-        result = False
-        top_discard_pile_item_id = self.game_canvas.getter.get_top_discard_pile_item_id()
-        if top_discard_pile_item_id:
-            result = configurations.DRAWN_TAG in self.game_canvas.getter.get_tags(top_discard_pile_item_id)
-        return result
+        pass
 
     def is_top_stock_pile_item_drawn(self) -> bool:
-        result = False
-        top_stock_pile_item_id = self.game_canvas.getter.get_top_stock_pile_item_id()
-        if top_stock_pile_item_id:
-            result = configurations.DRAWN_TAG in self.game_canvas.getter.get_tags(top_stock_pile_item_id)
-        return result
+        pass
 
     def is_item_id_selected(self, item_id) -> bool:
-        item_tags = self.game_canvas.getter.get_tags(item_id)
-        return configurations.SELECTED_TAG in item_tags
+        pass
 
     @staticmethod
     def is_scoring(legal_actions: List[int]) -> bool:

@@ -2,8 +2,6 @@ import os
 import csv
 
 class Logger(object):
-    ''' Logger saves the running results and helps make plots from the results
-    '''
 
     def __init__(self, log_dir):
         ''' Initialize the labels, legend and paths of the plot and log file.
@@ -30,26 +28,10 @@ class Logger(object):
         return self
 
     def log(self, text):
-        ''' Write the text to log file then print it.
-        Args:
-            text(string): text to log
-        '''
-        self.txt_file.write(text+'\n')
-        self.txt_file.flush()
-        print(text)
+        pass
 
     def log_performance(self, timestep, reward):
-        ''' Log a point in the curve
-        Args:
-            timestep (int): the timestep of the current point
-            reward (float): the reward of the current point
-        '''
-        self.writer.writerow({'timestep': timestep, 'reward': reward})
-        print('')
-        self.log('----------------------------------------')
-        self.log('  timestep     |  ' + str(timestep))
-        self.log('  reward       |  ' + str(reward))
-        self.log('----------------------------------------')
+        pass
 
     def __exit__(self, type, value, traceback):
         if self.txt_path is not None:

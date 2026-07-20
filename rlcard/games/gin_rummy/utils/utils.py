@@ -1,8 +1,3 @@
-'''
-    File name: gin_rummy/utils.py
-    Author: William Hale
-    Date created: 2/12/2020
-'''
 
 from typing import List, Iterable
 
@@ -34,18 +29,15 @@ def card_from_card_id(card_id: int) -> Card:
     return Card(rank=rank, suit=suit)
 
 
-# deck is always in order from AS, 2S, ..., AH, 2H, ..., AD, 2D, ..., AC, 2C, ... QC, KC
 _deck = [card_from_card_id(card_id) for card_id in range(52)]  # want this to be read-only
 
 
 def card_from_text(text: str) -> Card:
-    if len(text) != 2:
-        raise GinRummyProgramError("len(text) is {}: should be 2.".format(len(text)))
-    return Card(rank=text[0], suit=text[1])
+    pass
 
 
 def get_deck() -> List[Card]:
-    return _deck.copy()
+    pass
 
 
 def get_card(card_id: int):

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-"""Implement no limit texas holdem Round class"""
 from enum import Enum
 
 from rlcard.games.limitholdem import PlayerStatus
@@ -8,18 +7,12 @@ from rlcard.games.limitholdem import PlayerStatus
 class Action(Enum):
     FOLD = 0
     CHECK_CALL = 1
-    #CALL = 2
-    # RAISE_3BB = 3
     RAISE_HALF_POT = 2
     RAISE_POT = 3
-    # RAISE_2POT = 5
     ALL_IN = 4
-    # SMALL_BLIND = 7
-    # BIG_BLIND = 8
 
 
 class NolimitholdemRound:
-    """Round can call functions from other classes to keep the game running"""
 
     def __init__(self, num_players, init_raise_amount, dealer, np_random):
         """
@@ -36,14 +29,10 @@ class NolimitholdemRound:
 
         self.dealer = dealer
 
-        # Count the number without raise
-        # If every player agree to not raise, the round is over
         self.not_raise_num = 0
 
-        # Count players that are not playing anymore (folded or all-in)
         self.not_playing_num = 0
 
-        # Raised amount for each player
         self.raised = [0 for _ in range(self.num_players)]
 
     def start_new_round(self, game_pointer, raised=None):
@@ -117,7 +106,6 @@ class NolimitholdemRound:
         if player.status == PlayerStatus.FOLDED:
             self.not_playing_num += 1
 
-        # Skip the folded players
         while players[self.game_pointer].status == PlayerStatus.FOLDED:
             self.game_pointer = (self.game_pointer + 1) % self.num_players
 
@@ -136,16 +124,13 @@ class NolimitholdemRound:
 
         full_actions = list(Action)
 
-        # The player can always check or call
         player = players[self.game_pointer]
 
         diff = max(self.raised) - self.raised[self.game_pointer]
-        # If the current player has no more chips after call, we cannot raise
         if diff > 0 and diff >= player.remained_chips:
             full_actions.remove(Action.RAISE_HALF_POT)
             full_actions.remove(Action.RAISE_POT)
             full_actions.remove(Action.ALL_IN)
-        # Even if we can raise, we have to check remained chips
         else:
             if self.dealer.pot > player.remained_chips:
                 full_actions.remove(Action.RAISE_POT)
@@ -153,8 +138,6 @@ class NolimitholdemRound:
             if int(self.dealer.pot / 2) > player.remained_chips:
                 full_actions.remove(Action.RAISE_HALF_POT)
 
-            # Can't raise if the total raise amount is leq than the max raise amount of this round
-            # If raise by pot, there is no such concern
             if Action.RAISE_HALF_POT in full_actions and \
                 int(self.dealer.pot / 2) + self.raised[self.game_pointer] <= max(self.raised):
                 full_actions.remove(Action.RAISE_HALF_POT)

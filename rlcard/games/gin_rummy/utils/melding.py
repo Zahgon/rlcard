@@ -1,8 +1,3 @@
-'''
-    File name: gin_rummy/melding.py
-    Author: William Hale
-    Date created: 2/12/2020
-'''
 
 from typing import List
 
@@ -11,15 +6,6 @@ from rlcard.games.base import Card
 from rlcard.games.gin_rummy.utils import utils
 from rlcard.games.gin_rummy.utils.gin_rummy_error import GinRummyProgramError
 
-# ===============================================================
-#    Terminology:
-#        run_meld - three or more cards of same suit in sequence
-#        set_meld - three or more cards of same rank
-#        meld_pile - a run_meld or a set_meld
-#        meld_piles - a list of meld_pile
-#        meld_cluster - same as meld_piles, but usually with the piles being mutually disjoint
-#        meld_clusters - a list of meld_cluster
-# ===============================================================
 
 
 def get_meld_clusters(hand: List[Card]) -> List[List[List[Card]]]:

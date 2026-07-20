@@ -1,12 +1,4 @@
-'''
-    File name: bridge/utils/move.py
-    Author: William Hale
-    Date created: 11/25/2021
-'''
 
-#
-#   These classes are used to keep a move_sheet history of the moves in a round.
-#
 
 from .action_event import ActionEvent, BidAction, PassAction, DblAction, RdblAction, PlayCardAction
 from .bridge_card import BridgeCard

@@ -1,16 +1,9 @@
-'''
-    File name: envs/gin_rummy.py
-    Author: William Hale
-    Date created: 2/12/2020
-'''
 import numpy as np
 from collections import OrderedDict
 
 from rlcard.envs import Env
 
 class GinRummyEnv(Env):
-    ''' GinRummy Environment
-    '''
     def __init__(self, config):
         from rlcard.games.gin_rummy.utils.move import ScoreSouthMove
         from rlcard.games.gin_rummy.utils import utils
@@ -69,7 +62,6 @@ class GinRummyEnv(Env):
         Returns:
             payoffs (list): a list of payoffs for each player
         '''
-        # determine whether game completed all moves
         is_game_complete = False
         if self.game.round:
             move_sheet = self.game.round.move_sheet

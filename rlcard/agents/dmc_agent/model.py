@@ -1,17 +1,3 @@
-# Copyright 2021 RLCard Team of Texas A&M University
-# Copyright 2021 DouZero Team of Kwai
-# 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-# 
-#    http://www.apache.org/licenses/LICENSE-2.0
-# 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 
 import numpy as np
 
@@ -80,16 +66,15 @@ class DMCAgent:
         return action, info
 
     def share_memory(self):
-        self.net.share_memory()
+        pass
 
     def eval(self):
-        self.net.eval()
+        pass
 
     def parameters(self):
-        return self.net.parameters()
+        pass
 
     def predict(self, state):
-        # Prepare obs and actions
         obs = state['obs'].astype(np.float32)
         legal_actions = state['legal_actions']
         action_keys = np.array(list(legal_actions.keys()))
@@ -103,7 +88,6 @@ class DMCAgent:
 
         obs = np.repeat(obs[np.newaxis, :], len(action_keys), axis=0)
 
-        # Predict Q values
         values = self.net.forward(torch.from_numpy(obs).to(self.device),
                                   torch.from_numpy(action_values).to(self.device))
 
@@ -113,13 +97,13 @@ class DMCAgent:
         return self.net.forward(obs, actions)
 
     def load_state_dict(self, state_dict):
-        return self.net.load_state_dict(state_dict)
+        pass
 
     def state_dict(self):
-        return self.net.state_dict()
+        pass
 
     def set_device(self, device):
-        self.device = device
+        pass
 
 class DMCModel:
     def __init__(
@@ -142,18 +126,16 @@ class DMCModel:
             self.agents.append(agent)
 
     def share_memory(self):
-        for agent in self.agents:
-            agent.share_memory()
+        pass
 
     def eval(self):
-        for agent in self.agents:
-            agent.eval()
+        pass
 
     def parameters(self, index):
-        return self.agents[index].parameters()
+        pass
 
     def get_agent(self, index):
-        return self.agents[index]
+        pass
 
     def get_agents(self):
-        return self.agents
+        pass

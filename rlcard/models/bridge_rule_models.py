@@ -1,10 +1,3 @@
-'''
-    File name: models/bridge_rule_models.py
-    Author: William Hale
-    Date created: 11/27/2021
-
-    Bridge rule models
-'''
 
 import numpy as np
 
@@ -12,9 +5,6 @@ from rlcard.games.bridge.utils.action_event import ActionEvent
 
 
 class BridgeDefenderNoviceRuleAgent(object):
-    '''
-        Agent always passes during bidding
-    '''
 
     def __init__(self):
         self.use_raw = False

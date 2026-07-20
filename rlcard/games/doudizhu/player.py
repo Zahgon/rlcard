@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-''' Implement Doudizhu Player class
-'''
 import functools
 
 from rlcard.games.doudizhu.utils import get_gt_cards
@@ -8,10 +6,6 @@ from rlcard.games.doudizhu.utils import cards2str, doudizhu_sort_card
 
 
 class DoudizhuPlayer:
-    ''' Player can store cards in the player's hand and the role,
-    determine the actions can be made according to the rules,
-    and can perfrom corresponding action
-    '''
     def __init__(self, player_id, np_random):
         ''' Give the player an id in one game
 
@@ -32,13 +26,11 @@ class DoudizhuPlayer:
         self.played_cards = None
         self.singles = '3456789TJQKA2BR'
 
-        #record cards removed from self._current_hand for each play()
-        # and restore cards back to self._current_hand when play_back()
         self._recorded_played_cards = []
 
     @property
     def current_hand(self):
-        return self._current_hand
+        pass
 
     def set_current_hand(self, value):
         self._current_hand = value
@@ -108,8 +100,4 @@ class DoudizhuPlayer:
             return self
 
     def play_back(self):
-        ''' Restore recorded cards back to self._current_hand
-        '''
-        removed_cards = self._recorded_played_cards.pop()
-        self._current_hand.extend(removed_cards)
-        self._current_hand.sort(key=functools.cmp_to_key(doudizhu_sort_card))
+        pass

@@ -3,7 +3,6 @@ import numpy as np
 
 
 class LimitHoldemJudger:
-    """The Judger class for limit texas holdem"""
 
     def __init__(self, np_random):
         self.np_random = np_random
@@ -19,7 +18,6 @@ class LimitHoldemJudger:
         Returns:
             (list): Each entry of the list corresponds to one entry of the
         """
-        # Convert the hands into card indexes
         hands = [[card.get_index() for card in hand] if hand is not None else None for hand in hands]
 
         winners = compare_hands(hands)
@@ -48,7 +46,6 @@ class LimitHoldemJudger:
         nb_winners_in_pot = sum((winners[i] and in_chips[i] > 0) for i in range(len(in_chips)))
         nb_players_in_pot = sum(in_chips[i] > 0 for i in range(len(in_chips)))
         if nb_winners_in_pot == 0 or nb_winners_in_pot == nb_players_in_pot:
-            # no winner or all winners for this pot
             allocated = list(in_chips)  # we give back their chips to each players in this pot
             in_chips_after = len(in_chips) * [0]  # no more chips to distribute
         else:

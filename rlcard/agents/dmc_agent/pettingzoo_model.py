@@ -12,11 +12,7 @@ class DMCAgentPettingZoo(DMCAgent):
         return super().eval_step(wrap_state(state))
 
     def feed(self, ts):
-        state, action, reward, next_state, done = tuple(ts)
-        state = wrap_state(state)
-        next_state = wrap_state(next_state)
-        ts = (state, action, reward, next_state, done)
-        return super().feed(ts)
+        pass
 
 
 class DMCModelPettingZoo:
@@ -39,18 +35,16 @@ class DMCModelPettingZoo:
             self.agents[agent_name] = agent
 
     def share_memory(self):
-        for agent in self.agents.values():
-            agent.share_memory()
+        pass
 
     def eval(self):
-        for agent in self.agents.values():
-            agent.eval()
+        pass
 
     def parameters(self, index):
-        return list(self.agents.values())[index].parameters()
+        pass
 
     def get_agent(self, index):
-        return list(self.agents.values())[index]
+        pass
 
     def get_agents(self):
-        return list(self.agents.values())
+        pass

@@ -1,11 +1,4 @@
-'''
-    Project: Gui Gin Rummy
-    File name: canvas_item.py
-    Author: William Hale
-    Date created: 3/14/2020
-'''
 
-# from __future__ import annotations
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from rlcard.agents.gin_rummy_human_agent.gui_gin_rummy.game_canvas import GameCanvas
@@ -27,7 +20,7 @@ class CanvasItem(object):
         return hash(self.item_id)
 
     def get_tags(self):
-        return self.game_canvas.gettags(self.item_id)
+        pass
 
 
 class CardItem(CanvasItem):
@@ -38,15 +31,10 @@ class CardItem(CanvasItem):
         self.card_image = card_image
 
     def is_face_up(self) -> bool:
-        return self.card_image.face_up
+        pass
 
     def set_card_id_face_up(self, face_up: bool):
-        if self.card_image.face_up != face_up:
-            target_image = self.card_image if face_up else self.game_canvas.card_back_image
-            self.game_canvas.itemconfig(self.item_id, image=target_image)
-            self.card_image.face_up = face_up
+        pass
 
     def flip_over(self):
-        self.card_image.face_up = not self.card_image.face_up
-        target_image = self.card_image if self.card_image.face_up else self.game_canvas.card_back_image
-        self.game_canvas.itemconfig(self.item_id, image=target_image)
+        pass

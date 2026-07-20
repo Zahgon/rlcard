@@ -7,8 +7,6 @@ from rlcard.games.mahjong import Card
 from rlcard.games.mahjong.utils import card_encoding_dict, encode_cards, pile2list
 
 class MahjongEnv(Env):
-    ''' Mahjong Environment
-    '''
 
     def __init__(self, config):
         self.name = 'mahjong'
@@ -106,6 +104,4 @@ class MahjongEnv(Env):
             print(self.game.judger.judge_game(self.game))
             print(self.game.is_over())
             print([len(p.pile) for p in self.game.players])
-            #print(self.game.get_state(self.game.round.current_player))
-            #exit()
         return OrderedDict(legal_action_id)

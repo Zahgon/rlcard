@@ -1,9 +1,3 @@
-'''
-    Project: Gui Gin Rummy
-    File name: gin_rummy_human_agent.py
-    Author: William Hale
-    Date created: 3/14/2020
-'''
 
 import time
 
@@ -12,8 +6,6 @@ from rlcard.games.gin_rummy.utils.gin_rummy_error import GinRummyProgramError
 
 
 class HumanAgent(object):
-    ''' A human agent for Gin Rummy. It can be used to play against trained models.
-    '''
 
     def __init__(self, num_actions):
         ''' Initialize the human agent

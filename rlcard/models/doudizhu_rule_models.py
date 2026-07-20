@@ -1,5 +1,3 @@
-''' Dou Dizhu rule models
-'''
 
 import numpy as np
 
@@ -8,8 +6,6 @@ from rlcard.games.doudizhu.utils import CARD_TYPE, INDEX
 from rlcard.models.model import Model
 
 class DouDizhuRuleAgentV1(object):
-    ''' Dou Dizhu Rule agent version 1
-    '''
 
     def __init__(self):
         self.use_raw = True
@@ -24,7 +20,6 @@ class DouDizhuRuleAgentV1(object):
         '''
         state = state['raw_obs']
         trace = state['trace']
-        # the rule of leading round
         if len(trace) == 0 or (len(trace) >= 3 and trace[-1][1] == 'pass' and trace[-2][1] == 'pass'):
             comb = self.combine_cards(state['current_hand'])
             min_card = state['current_hand'][0]
@@ -32,7 +27,6 @@ class DouDizhuRuleAgentV1(object):
                 for action in actions:
                     if min_card in action:
                         return action
-        # the rule of following cards
         else:
             target = state['trace'][-1][-1]
             target_player = state['trace'][-1][0]
@@ -64,18 +58,15 @@ class DouDizhuRuleAgentV1(object):
         '''
         comb = {'rocket': [], 'bomb': [], 'trio': [], 'trio_chain': [],
                 'solo_chain': [], 'pair_chain': [], 'pair': [], 'solo': []}
-        # 1. pick rocket
         if hand[-2:] == 'BR':
             comb['rocket'].append('BR')
             hand = hand[:-2]
-        # 2. pick bomb
         hand_cp = hand
         for index in range(len(hand_cp) - 3):
             if hand_cp[index] == hand_cp[index+3]:
                 bomb = hand_cp[index: index+4]
                 comb['bomb'].append(bomb)
                 hand = hand.replace(bomb, '')
-        # 3. pick trio and trio_chain
         hand_cp = hand
         for index in range(len(hand_cp) - 2):
             if hand_cp[index] == hand_cp[index+2]:
@@ -94,15 +85,12 @@ class DouDizhuRuleAgentV1(object):
                 only_trio_chain.append(trio)
         comb['trio'] = only_trio
         comb['trio_chain'] = only_trio_chain
-        # 4. pick solo chain
         hand_list = self.card_str2list(hand)
         chains, hand_list = self.pick_chain(hand_list, 1)
         comb['solo_chain'] = chains
-        # 5. pick par_chain
         chains, hand_list = self.pick_chain(hand_list, 2)
         comb['pair_chain'] = chains
         hand = self.list2card_str(hand_list)
-        # 6. pick pair and solo
         index = 0
         while index < len(hand) - 1:
             if hand[index] == hand[index+1]:
@@ -156,8 +144,6 @@ class DouDizhuRuleAgentV1(object):
 
 
 class DouDizhuRuleModelV1(Model):
-    ''' Dou Dizhu Rule Model version 1
-    '''
 
     def __init__(self):
         ''' Load pretrained model
@@ -169,12 +155,4 @@ class DouDizhuRuleModelV1(Model):
 
     @property
     def agents(self):
-        ''' Get a list of agents for each position in a the game
-
-        Returns:
-            agents (list): A list of agents
-
-        Note: Each agent should be just like RL agent with step and eval_step
-              functioning well.
-        '''
-        return self.rule_agents
+        pass

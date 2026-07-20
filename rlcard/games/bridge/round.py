@@ -1,8 +1,3 @@
-'''
-    File name: bridge/round.py
-    Author: William Hale
-    Date created: 11/25/2021
-'''
 
 from typing import List
 
@@ -18,25 +13,19 @@ class BridgeRound:
 
     @property
     def dealer_id(self) -> int:
-        return self.tray.dealer_id
+        pass
 
     @property
     def vul(self):
-        return self.tray.vul
+        pass
 
     @property
     def board_id(self) -> int:
-        return self.tray.board_id
+        pass
 
     @property
     def round_phase(self):
-        if self.is_over():
-            result = 'game over'
-        elif self.is_bidding_over():
-            result = 'play card'
-        else:
-            result = 'make bid'
-        return result
+        pass
 
     def __init__(self, num_players: int, board_id: int, np_random):
         ''' Initialize the round class
@@ -134,7 +123,6 @@ class BridgeRound:
         return trump_suit
 
     def make_call(self, action: CallActionEvent):
-        # when current_player takes CallActionEvent step, the move is recorded and executed
         current_player = self.players[self.current_player_id]
         if isinstance(action, PassAction):
             self.move_sheet.append(MakePassMove(current_player))
@@ -156,13 +144,11 @@ class BridgeRound:
             self.current_player_id = (self.current_player_id + 1) % 4
 
     def play_card(self, action: PlayCardAction):
-        # when current_player takes PlayCardAction step, the move is recorded and executed
         current_player = self.players[self.current_player_id]
         self.move_sheet.append(PlayCardMove(current_player, action))
         card = action.card
         current_player.remove_card_from_hand(card=card)
         self.play_card_count += 1
-        # update current_player_id
         trick_moves = self.get_trick_moves()
         if len(trick_moves) == 4:
             trump_suit = self.get_trump_suit()
@@ -209,53 +195,10 @@ class BridgeRound:
         return left_defender
 
     def get_right_defender(self) -> BridgePlayer or None:
-        right_defender = None
-        declarer = self.get_declarer()
-        if declarer:
-            right_defender = self.players[(declarer.player_id + 3) % 4]
-        return right_defender
+        pass
 
     def get_perfect_information(self):
-        state = {}
-        last_call_move = None
-        if not self.is_bidding_over() or self.play_card_count == 0:
-            last_move = self.move_sheet[-1]
-            if isinstance(last_move, CallMove):
-                last_call_move = last_move
-        trick_moves = [None, None, None, None]
-        if self.is_bidding_over():
-            for trick_move in self.get_trick_moves():
-                trick_moves[trick_move.player.player_id] = trick_move.card
-        state['move_count'] = len(self.move_sheet)
-        state['tray'] = self.tray
-        state['current_player_id'] = self.current_player_id
-        state['round_phase'] = self.round_phase
-        state['last_call_move'] = last_call_move
-        state['doubling_cube'] = self.doubling_cube
-        state['contact'] = self.contract_bid_move if self.is_bidding_over() and self.contract_bid_move else None
-        state['hands'] = [player.hand for player in self.players]
-        state['trick_moves'] = trick_moves
-        return state
+        pass
 
     def print_scene(self):
-        print(f'===== Board: {self.tray.board_id} move: {len(self.move_sheet)} player: {self.players[self.current_player_id]} phase: {self.round_phase} =====')
-        print(f'dealer={self.players[self.tray.dealer_id]}')
-        print(f'vul={self.vul}')
-        if not self.is_bidding_over() or self.play_card_count == 0:
-            last_move = self.move_sheet[-1]
-            last_call_text = f'{last_move}' if isinstance(last_move, CallMove) else 'None'
-            print(f'last call: {last_call_text}')
-        if self.is_bidding_over() and self.contract_bid_move:
-            bid_suit = self.contract_bid_move.action.bid_suit
-            doubling_cube = self.doubling_cube
-            if not bid_suit:
-                bid_suit = 'NT'
-            doubling_cube_text = "" if doubling_cube == 1 else "dbl" if doubling_cube == 2 else "rdbl"
-            print(f'contract: {self.contract_bid_move.player} {self.contract_bid_move.action.bid_amount}{bid_suit} {doubling_cube_text}')
-        for player in self.players:
-            print(f'{player}: {[str(card) for card in player.hand]}')
-        if self.is_bidding_over():
-            trick_pile = ['None', 'None', 'None', 'None']
-            for trick_move in self.get_trick_moves():
-                trick_pile[trick_move.player.player_id] = trick_move.card
-            print(f'trick_pile: {[str(card) for card in trick_pile]}')
+        pass

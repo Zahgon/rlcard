@@ -1,8 +1,6 @@
 from rlcard.utils.utils import rank2int
 
 class LeducholdemJudger:
-    ''' The Judger class for Leduc Hold'em
-    '''
     def __init__(self, np_random):
         ''' Initialize a judger class
         '''
@@ -19,11 +17,9 @@ class LeducholdemJudger:
         Returns:
             (list): Each entry of the list corresponds to one entry of the
         '''
-        # Judge who are the winners
         winners = [0] * len(players)
         fold_count = 0
         ranks = []
-        # If every player folds except one, the alive player is the winner
         for idx, player in enumerate(players):
             ranks.append(rank2int(player.hand.rank))
             if player.status == 'folded':
@@ -33,21 +29,18 @@ class LeducholdemJudger:
         if fold_count == (len(players) - 1):
             winners[alive_idx] = 1
         
-        # If any of the players matches the public card wins
         if sum(winners) < 1:
             for idx, player in enumerate(players):
                 if player.hand.rank == public_card.rank:
                     winners[idx] = 1
                     break
         
-        # If non of the above conditions, the winner player is the one with the highest card rank
         if sum(winners) < 1:
             max_rank = max(ranks)
             max_index = [i for i, j in enumerate(ranks) if j == max_rank]
             for idx in max_index:
                 winners[idx] = 1
 
-        # Compute the total chips
         total = 0
         for p in players:
             total += p.in_chips

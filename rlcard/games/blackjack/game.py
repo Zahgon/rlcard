@@ -70,13 +70,11 @@ class BlackjackGame:
             self.history.append((d, p, w))
 
         next_state = {}
-        # Play hit
         if action != "stand":
             self.dealer.deal_card(self.players[self.game_pointer])
             self.players[self.game_pointer].status, self.players[self.game_pointer].score = self.judger.judge_round(
                 self.players[self.game_pointer])
             if self.players[self.game_pointer].status == 'bust':
-                # game over, set up the winner, print out dealer's hand # If bust, pass the game pointer
                 if self.game_pointer >= self.num_players - 1:
                     while self.judger.judge_score(self.dealer.hand) < 17:
                         self.dealer.deal_card(self.dealer)
@@ -123,16 +121,7 @@ class BlackjackGame:
         return next_state, self.game_pointer
 
     def step_back(self):
-        ''' Return to the previous state of the game
-
-        Returns:
-            Status (bool): check if the step back is success or not
-        '''
-        #while len(self.history) > 0:
-        if len(self.history) > 0:
-            self.dealer, self.players[self.game_pointer], self.winner = self.history.pop()
-            return True
-        return False
+        pass
 
     def get_num_players(self):
         ''' Return the number of players in blackjack
@@ -144,12 +133,7 @@ class BlackjackGame:
 
     @staticmethod
     def get_num_actions():
-        ''' Return the number of applicable actions
-
-        Returns:
-            number_of_actions (int): there are only two actions (hit and stand)
-        '''
-        return 2
+        pass
 
     def get_player_id(self):
         ''' Return the current player's id

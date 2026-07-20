@@ -5,8 +5,6 @@ from rlcard.envs import Env
 
 
 class DoudizhuEnv(Env):
-    ''' Doudizhu Environment
-    '''
 
     def __init__(self, config):
         from rlcard.games.doudizhu.utils import ACTION_2_ID, ID_2_ACTION
@@ -118,26 +116,10 @@ class DoudizhuEnv(Env):
         return legal_actions
 
     def get_perfect_information(self):
-        ''' Get the perfect information of the current state
-
-        Returns:
-            (dict): A dictionary of all the perfect information of the current state
-        '''
-        state = {}
-        state['hand_cards_with_suit'] = [self._cards2str_with_suit(player.current_hand) for player in self.game.players]
-        state['hand_cards'] = [self._cards2str(player.current_hand) for player in self.game.players]
-        state['trace'] = self.game.state['trace']
-        state['current_player'] = self.game.round.current_player
-        state['legal_actions'] = self.game.state['actions']
-        return state
+        pass
 
     def get_action_feature(self, action):
-        ''' For some environments such as DouDizhu, we can have action features
-
-        Returns:
-            (numpy.array): The action features
-        '''
-        return _cards2array(self._decode_action(action))
+        pass
 
 Card2Column = {'3': 0, '4': 1, '5': 2, '6': 3, '7': 4, '8': 5, '9': 6, 'T': 7,
                'J': 8, 'Q': 9, 'K': 10, 'A': 11, '2': 12}

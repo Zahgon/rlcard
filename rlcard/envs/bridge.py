@@ -1,8 +1,3 @@
-'''
-    File name: envs/bridge.py
-    Author: William Hale
-    Date created: 11/26/2021
-'''
 
 import numpy as np
 from collections import OrderedDict
@@ -16,34 +11,9 @@ from rlcard.games.bridge.utils.action_event import ActionEvent
 from rlcard.games.bridge.utils.bridge_card import BridgeCard
 from rlcard.games.bridge.utils.move import CallMove, PlayCardMove
 
-#   [] Why no_bid_action_id in bidding_rep ?
-#       It allows the bidding always to start with North.
-#       If North is not the dealer, then he must call 'no_bid'.
-#       Until the dealer is reached, 'no_bid' must be the call.
-#       I think this might help because it keeps a player's bid in a fixed 'column'.
-#       Note: the 'no_bid' is only inserted in the bidding_rep, not in the actual game.
-#
-#   [] Why current_player_rep ?
-#       Explanation here.
-#
-#   [] Note: hands_rep maintain the hands by N, E, S, W.
-#
-#   [] Note: trick_rep maintains the trick cards by N, E, S, W.
-#      The trick leader can be deduced since play is in clockwise direction.
-#
-#   [] Note: is_bidding_rep can be deduced from bidding_rep.
-#      I think I added is_bidding_rep before bidding_rep and thus it helped in early testing.
-#      My early testing had just the player's hand: I think the model conflated the bidding phase with the playing phase in this situation.
-#      Although is_bidding_rep is not needed, keeping it may improve learning.
-#
-#   [] Note: bidding_rep uses the action_id instead of one hot encoding.
-#      I think one hot encoding would make the input dimension significantly larger.
-#
 
 
 class BridgeEnv(Env):
-    ''' Bridge Environment
-    '''
     def __init__(self, config):
         self.name = 'bridge'
         self.game = Game()
@@ -63,12 +33,7 @@ class BridgeEnv(Env):
         return self.bridgePayoffDelegate.get_payoffs(game=self.game)
 
     def get_perfect_information(self):
-        ''' Get the perfect information of the current state
-
-        Returns:
-            (dict): A dictionary of all the perfect information of the current state
-        '''
-        return self.game.round.get_perfect_information()
+        pass
 
     def _extract_state(self, state):  # wch: don't use state 211126
         ''' Extract useful information from state for RL.
@@ -179,19 +144,7 @@ class DefaultBridgeStateExtractor(BridgeStateExtractor):
         self.last_bid_rep_size = 1 + 35 + 3  # no_bid, bid, pass, dbl, rdbl
 
     def get_state_shape_size(self) -> int:
-        state_shape_size = 0
-        state_shape_size += 4 * 52  # hands_rep_size
-        state_shape_size += 4 * 52  # trick_rep_size
-        state_shape_size += 52  # hidden_cards_rep_size
-        state_shape_size += 4  # vul_rep_size
-        state_shape_size += 4  # dealer_rep_size
-        state_shape_size += 4  # current_player_rep_size
-        state_shape_size += 1  # is_bidding_rep_size
-        state_shape_size += self.max_bidding_rep_index  # bidding_rep_size
-        state_shape_size += self.last_bid_rep_size  # last_bid_rep_size
-        state_shape_size += 8  # bid_amount_rep_size
-        state_shape_size += 5  # trump_suit_rep_size
-        return state_shape_size
+        pass
 
     def extract_state(self, game: BridgeGame):
         ''' Extract useful information from state for RL.
@@ -208,7 +161,6 @@ class DefaultBridgeStateExtractor(BridgeStateExtractor):
         current_player = game.round.get_current_player()
         current_player_id = current_player.player_id
 
-        # construct hands_rep of hands of players
         hands_rep = [np.zeros(52, dtype=int) for _ in range(4)]
         if not game.is_over():
             for card in game.round.players[current_player_id].hand:
@@ -219,7 +171,6 @@ class DefaultBridgeStateExtractor(BridgeStateExtractor):
                 for card in other_known_player.hand:
                     hands_rep[other_known_player.player_id][card.card_id] = 1
 
-        # construct trick_pile_rep
         trick_pile_rep = [np.zeros(52, dtype=int) for _ in range(4)]
         if game.round.is_bidding_over() and not game.is_over():
             trick_moves = game.round.get_trick_moves()
@@ -228,7 +179,6 @@ class DefaultBridgeStateExtractor(BridgeStateExtractor):
                 card = move.card
                 trick_pile_rep[player.player_id][card.card_id] = 1
 
-        # construct hidden_card_rep (during trick taking phase)
         hidden_cards_rep = np.zeros(52, dtype=int)
         if not game.is_over():
             if game.round.is_bidding_over():
@@ -246,21 +196,16 @@ class DefaultBridgeStateExtractor(BridgeStateExtractor):
                         for card in player.hand:
                             hidden_cards_rep[card.card_id] = 1
 
-        # construct vul_rep
         vul_rep = np.array(game.round.tray.vul, dtype=int)
 
-        # construct dealer_rep
         dealer_rep = np.zeros(4, dtype=int)
         dealer_rep[game.round.tray.dealer_id] = 1
 
-        # construct current_player_rep
         current_player_rep = np.zeros(4, dtype=int)
         current_player_rep[current_player_id] = 1
 
-        # construct is_bidding_rep
         is_bidding_rep = np.array([1] if game.round.is_bidding_over() else [0])
 
-        # construct bidding_rep
         bidding_rep = np.zeros(self.max_bidding_rep_index, dtype=int)
         bidding_rep_index = game.round.dealer_id  # no_bid_action_ids allocated at start so that north always 'starts' the bidding
         for move in game.round.move_sheet:
@@ -272,13 +217,11 @@ class DefaultBridgeStateExtractor(BridgeStateExtractor):
                 bidding_rep[bidding_rep_index] = move.action.action_id
                 bidding_rep_index += 1
 
-        # last_bid_rep
         last_bid_rep = np.zeros(self.last_bid_rep_size, dtype=int)
         last_move = game.round.move_sheet[-1]
         if isinstance(last_move, CallMove):
             last_bid_rep[last_move.action.action_id - ActionEvent.no_bid_action_id] = 1
 
-        # bid_amount_rep and trump_suit_rep
         bid_amount_rep = np.zeros(8, dtype=int)
         trump_suit_rep = np.zeros(5, dtype=int)
         if game.round.is_bidding_over() and not game.is_over() and game.round.play_card_count == 0:

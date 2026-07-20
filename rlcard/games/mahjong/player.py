@@ -19,14 +19,10 @@ class MahjongPlayer:
         return self.player_id
 
     def print_hand(self):
-        ''' Print the cards in hand in string.
-        '''
-        print([c.get_str() for c in self.hand])
+        pass
 
     def print_pile(self):
-        ''' Print the cards in pile of the player in string.
-        '''
-        print([[c.get_str() for c in s]for s in self.pile])
+        pass
 
     def play_card(self, dealer, card):
         ''' Play one card

@@ -1,11 +1,4 @@
-'''
-    Project: Gui Gin Rummy
-    File name: status_messaging.py
-    Author: William Hale
-    Date created: 3/14/2020
-'''
 
-# from __future__ import annotations
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .game_canvas import GameCanvas
@@ -18,9 +11,6 @@ from .configurations import DECLARE_DEAD_HAND_ACTION_ID
 from rlcard.games.gin_rummy.game import GinRummyGame
 
 
-#
-#   Show prolog messages
-#
 
 def show_prolog_message(player_id: int, legal_actions, game_canvas: 'GameCanvas'):
     game_canvas_moves = game_canvas.getter.get_game_canvas_moves()
@@ -71,12 +61,9 @@ def show_put_card_message(player_id: int, game_canvas: 'GameCanvas'):
         game_canvas.info_label.configure(text=message)
 
 
-#
-#   Show epilog messages
-#
 
 def show_epilog_message_on_declare_dead_hand(game_canvas: 'GameCanvas'):
-    game_canvas.info_label.configure(text="")
+    pass
 
 
 def show_game_over_message(game: GinRummyGame, game_canvas: 'GameCanvas'):
@@ -94,9 +81,6 @@ def show_game_over_message(game: GinRummyGame, game_canvas: 'GameCanvas'):
     info_messaging.show_hide_tips_message(game_canvas=game_canvas)
 
 
-#
-#   private methods
-#
 
 def _show_get_card_message(player_id: int, game_canvas: 'GameCanvas'):
     is_human_player = game_canvas.query.is_human(player_id=player_id)

@@ -1,10 +1,3 @@
-'''
-    File name: models/gin_rummy_rule_models.py
-    Author: William Hale
-    Date created: 2/12/2020
-
-    Gin Rummy rule models
-'''
 
 from typing import TYPE_CHECKING
 from collections import OrderedDict
@@ -27,9 +20,6 @@ import rlcard.games.gin_rummy.utils.utils as utils
 
 
 class GinRummyNoviceRuleAgent(object):
-    '''
-        Agent always discards highest deadwood value card
-    '''
 
     def __init__(self):
         self.use_raw = False  # FIXME: should this be True ?
@@ -114,8 +104,6 @@ class GinRummyNoviceRuleAgent(object):
 
 
 class GinRummyNoviceRuleModel(Model):
-    ''' Gin Rummy Rule Model
-    '''
 
     def __init__(self):
         ''' Load pre-trained model
@@ -127,12 +115,4 @@ class GinRummyNoviceRuleModel(Model):
 
     @property
     def agents(self):
-        ''' Get a list of agents for each position in a the game
-
-        Returns:
-            agents (list): A list of agents
-
-        Note: Each agent should be just like RL agent with step and eval_step
-              functioning well.
-        '''
-        return self.rule_agents
+        pass

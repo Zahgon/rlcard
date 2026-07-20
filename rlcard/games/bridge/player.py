@@ -1,8 +1,3 @@
-'''
-    File name: bridge/player.py
-    Author: William Hale
-    Date created: 11/25/2021
-'''
 
 from typing import List
 

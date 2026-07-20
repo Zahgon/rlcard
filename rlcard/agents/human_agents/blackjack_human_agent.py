@@ -2,8 +2,6 @@ from rlcard.utils.utils import print_card
 
 
 class HumanAgent(object):
-    ''' A human agent for Blackjack. It can be used to play alone for understand how the blackjack code runs
-    '''
 
     def __init__(self, num_actions):
         ''' Initilize the human agent

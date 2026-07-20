@@ -1,23 +1,11 @@
-'''
-    Project: Gui Gin Rummy
-    File name: configurations.py
-    Author: William Hale
-    Date created: 3/14/2020
-'''
 
 import os
 
 from configparser import ConfigParser
 
-#
-#   Gin Rummy parameters
-#
 
 GOING_OUT_DEADWOOD_COUNT = 10
 
-#
-#   RLCard Gin Rummy parameters
-#
 
 MAX_DRAWN_CARD_COUNT = 52
 
@@ -40,22 +28,15 @@ GIN_ACTION_ID = 5
 DISCARD_ACTION_ID = 6
 KNOCK_ACTION_ID = DISCARD_ACTION_ID + 52
 
-#
-#   Not User Modifiable Options
-#
 
 IS_KEEP_TURN_WHEN_DISCARDING_CARD_PICKED_UP = False  # TODO: make True the default value
 
-#
-#   User Modifiable Options
-#
 
 config_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'game_options.ini')  # Note this
 
 config = ConfigParser()
 found = config.read(config_path)
 
-# settings section
 settings_section = "settings"
 show_status_messages_option = "show_status_messages"
 warning_as_option = 'warning_as'
@@ -69,6 +50,4 @@ WARNINGS_AS = config.get(section=settings_section, option=warning_as_option, fal
 GAME_BACKGROUND_COLOR = config.get(section=settings_section, option=game_background_color_option, fallback="#007F00")
 WINDOW_SIZE_FACTOR = config.getint(section=settings_section, option=window_size_factor_option, fallback=75)
 IS_SHOW_TIPS = config.getboolean(section=settings_section, option=is_show_tips_option, fallback=True)
-# Note: IS_DEBUG always starts off as False; must explicitly update via preference window
-# IS_DEBUG = config.getboolean(section=settings_section, option=is_debug_option, fallback=False)
 IS_DEBUG = False

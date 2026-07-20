@@ -2,8 +2,6 @@ from rlcard.utils.utils import print_card
 
 
 class HumanAgent(object):
-    ''' A human agent for Limit Holdem. It can be used to play against trained models
-    '''
 
     def __init__(self, num_actions):
         ''' Initilize the human agent

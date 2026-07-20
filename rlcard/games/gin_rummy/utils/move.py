@@ -1,8 +1,3 @@
-'''
-    File name: gin_rummy/move.py
-    Author: William Hale
-    Date created: 2/16/2020
-'''
 
 from typing import List
 
@@ -13,9 +8,6 @@ from .action_event import *
 from .gin_rummy_error import GinRummyProgramError
 
 
-#
-#   These classes are used to keep a move_sheet history of the moves in a round.
-#
 
 class GinRummyMove(object):
     pass

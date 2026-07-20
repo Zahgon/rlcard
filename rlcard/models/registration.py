@@ -1,8 +1,6 @@
 import importlib
 
 class ModelSpec(object):
-    ''' A specification for a particular Model.
-    '''
     def __init__(self, model_id, entry_point=None):
         ''' Initilize
 
@@ -25,8 +23,6 @@ class ModelSpec(object):
 
 
 class ModelRegistry(object):
-    ''' Register a model by ID
-    '''
 
     def __init__(self):
         ''' Initilize
@@ -54,7 +50,6 @@ class ModelRegistry(object):
             raise ValueError('Cannot find model_id: {}'.format(model_id))
         return self.model_specs[model_id].load()
 
-# Have a global registry
 model_registry = ModelRegistry()
 
 

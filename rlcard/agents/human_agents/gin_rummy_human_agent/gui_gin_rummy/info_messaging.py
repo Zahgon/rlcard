@@ -1,11 +1,4 @@
-'''
-    Project: Gui Gin Rummy
-    File name: info_messaging.py
-    Author: William Hale
-    Date created: 3/28/2020
-'''
 
-# from __future__ import annotations
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .game_canvas import GameCanvas
@@ -20,7 +13,7 @@ from . import configurations
 
 
 def blank_info_message_label(game_canvas: 'GameCanvas'):
-    game_canvas.info_message_label.configure(text="")
+    pass
 
 
 def show_activate_menus_message(game_canvas: 'GameCanvas'):

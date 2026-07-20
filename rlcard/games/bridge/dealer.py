@@ -1,8 +1,3 @@
-'''
-    File name: bridge/dealer.py
-    Author: William Hale
-    Date created: 11/25/2021
-'''
 
 from typing import List
 
@@ -11,8 +6,6 @@ from .utils.bridge_card import BridgeCard
 
 
 class BridgeDealer:
-    ''' Initialize a BridgeDealer dealer class
-    '''
     def __init__(self, np_random):
         ''' set shuffled_deck, set stock_pile
         '''

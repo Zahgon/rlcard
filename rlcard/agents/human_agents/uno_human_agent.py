@@ -1,8 +1,6 @@
 from rlcard.games.uno.card import UnoCard
 
 class HumanAgent(object):
-    ''' A human agent for Leduc Holdem. It can be used to play against trained models
-    '''
 
     def __init__(self, num_actions):
         ''' Initilize the human agent

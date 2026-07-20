@@ -1,24 +1,8 @@
-'''
-    File name: gin_rummy/action_event.py
-    Author: William Hale
-    Date created: 2/12/2020
-'''
 
 from rlcard.games.base import Card
 
 from . import utils as utils
 
-# ====================================
-# Action_ids:
-#        0 -> score_player_0_id
-#        1 -> score_player_1_id
-#        2 -> draw_card_id
-#        3 -> pick_up_discard_id
-#        4 -> declare_dead_hand_id
-#        5 -> gin_id
-#        6 to 57 -> discard_id card_id
-#        58 to 109 -> knock_id card_id
-# ====================================
 
 score_player_0_action_id = 0
 score_player_1_action_id = 1
@@ -43,9 +27,7 @@ class ActionEvent(object):
 
     @staticmethod
     def get_num_actions():
-        ''' Return the number of possible actions in the game
-        '''
-        return knock_action_id + 52  # FIXME: sensitive to code changes 200213
+        pass
 
     @staticmethod
     def decode_action(action_id) -> 'ActionEvent':

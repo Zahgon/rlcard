@@ -1,11 +1,4 @@
-'''
-    Project: Gui Gin Rummy
-    File name: game_canvas_getter.py
-    Author: William Hale
-    Date created: 3/14/2020
-'''
 
-# from __future__ import annotations
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .game_canvas import GameCanvas
@@ -20,7 +13,6 @@ import rlcard.games.gin_rummy.utils.utils as gin_rummy_utils
 
 from rlcard.games.gin_rummy.game import GinRummyGame
 
-# GinRummyMoves
 from rlcard.games.gin_rummy.utils.move import GinRummyMove
 from rlcard.games.gin_rummy.utils.move import DealHandMove
 from rlcard.games.gin_rummy.utils.move import DrawCardMove, PickupDiscardMove, DeclareDeadHandMove
@@ -163,7 +155,7 @@ class GameCanvasGetter(object):
         return legal_actions
 
     def get_tags(self, item_id) -> List[str]:
-        return [] if not item_id else self.game_canvas.itemcget(item_id, 'tags')
+        pass
 
     def get_card_id(self, card_item_id: int) -> int:
         game_canvas = self.game_canvas
@@ -179,9 +171,7 @@ class GameCanvasGetter(object):
         return None if not discard_pile_item_ids else discard_pile_item_ids[-1]
 
     def get_top_stock_pile_item_id(self) -> int or None:
-        game_canvas = self.game_canvas
-        stock_pile_item_ids = game_canvas.find_withtag(configurations.STOCK_PILE_TAG)
-        return None if not stock_pile_item_ids else stock_pile_item_ids[-1]
+        pass
 
     def get_stock_pile_item_ids(self) -> List[int]:
         game_canvas = self.game_canvas
@@ -204,8 +194,4 @@ class GameCanvasGetter(object):
         return held_pile_cards
 
     def get_selected_held_pile_item_ids(self, player_id: int) -> List[int]:
-        game_canvas = self.game_canvas
-        held_pile_item_ids = self.get_held_pile_item_ids(player_id)
-        selected_item_ids = game_canvas.find_withtag(configurations.SELECTED_TAG)
-        selected_held_pile_item_ids = [x for x in selected_item_ids if x in held_pile_item_ids]
-        return selected_held_pile_item_ids
+        pass

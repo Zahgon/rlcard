@@ -1,11 +1,7 @@
-''' Limit Hold 'em rule model
-'''
 import rlcard
 from rlcard.models.model import Model
 
 class LimitholdemRuleAgentV1(object):
-    ''' Limit Hold 'em Rule agent version 1
-    '''
 
     def __init__(self):
         self.use_raw = True
@@ -24,13 +20,6 @@ class LimitholdemRuleAgentV1(object):
         hand = state['hand']
         public_cards = state['public_cards']
         action = 'fold'
-        # When having only 2 hand cards at the game start, choose fold to drop terrible cards:
-        # Acceptable hand cards:
-        # Pairs
-        # AK, AQ, AJ, AT
-        # A9s, A8s, ... A2s(s means flush)
-        # KQ, KJ, QJ, JT
-        # Fold all hand types except those mentioned above to save money
         if len(public_cards) == 0:
             if hand[0][1] == hand [1][1]:
                 action = 'raise'
@@ -49,15 +38,12 @@ class LimitholdemRuleAgentV1(object):
                 public_cards_ranks[i] = public_cards[i][1]
                 public_cards_flush[i] = public_cards[i][0]
             if hand[0][1] == hand [1][1]:
-            # if the player already have a pair, raise when public cards have card same as the pair
                 if hand[0][1] in public_cards_ranks:
                     action = 'raise'
             elif hand[0][1] == 'A' or hand[1][1] == 'A':
                 if 'K' in [hand[0][1], hand[1][1]] or 'Q' in [hand[0][1], hand[1][1]] or 'J' in [hand[0][1], hand[1][1]] or 'T' in [hand[0][1], hand[1][1]]:
-                    # For AK, AQ, AJ, AT types, if public cards have A, K, Q, J, T, raise, because the chance of getting a straight greatly increases
                     if 'A' in public_cards_ranks or 'K' in public_cards_ranks or 'Q' in public_cards_ranks or 'J' in public_cards_ranks or 'T' in public_cards_ranks:
                         action = 'raise'
-                # For A9s, A8s, ... A2s types, if public cards have same flush as the hand cards, raise, because the chance of getting a flush greatly increases
                 elif hand[0][0] == hand[1][0]:
                     if hand[0][0] in public_cards_flush:
                         action = 'raise'
@@ -75,15 +61,12 @@ class LimitholdemRuleAgentV1(object):
                 public_cards_ranks[i] = public_cards[i][1]
                 public_cards_flush[i] = public_cards[i][0]
             if hand[0][1] == hand [1][1]:
-            # if the player already have a pair, raise when public cards have card same as the pair
                 if hand[0][1] in public_cards_ranks:
                     action = 'raise'
             elif hand[0][1] == 'A' or hand[1][1] == 'A':
                 if 'K' in [hand[0][1], hand[1][1]] or 'Q' in [hand[0][1], hand[1][1]] or 'J' in [hand[0][1], hand[1][1]] or 'T' in [hand[0][1], hand[1][1]]:
-                    # For AK, AQ, AJ, AT types, if public cards have A, K, Q, J, T, raise, because the chance of getting a straight greatly increases
                     if 'A' in public_cards_ranks or 'K' in public_cards_ranks or 'Q' in public_cards_ranks or 'J' in public_cards_ranks or 'T' in public_cards_ranks:
                         action = 'raise'
-                    # For A9s, A8s, ... A2s types, if public cards have same flush as the hand cards, raise, because the chance of getting a flush greatly increases
                 elif hand[0][0] == hand[1][0]:
                     if hand[0][0] in public_cards_flush:
                         action = 'raise'
@@ -92,7 +75,6 @@ class LimitholdemRuleAgentV1(object):
             else:
                 action = 'call'
 
-        #return action
         if action in legal_actions:
             return action
         else:
@@ -111,8 +93,6 @@ class LimitholdemRuleAgentV1(object):
         return self.step(state), []
 
 class LimitholdemRuleModelV1(Model):
-    ''' Limitholdem Rule Model version 1
-    '''
 
     def __init__(self):
         ''' Load pretrained model
@@ -124,21 +104,8 @@ class LimitholdemRuleModelV1(Model):
 
     @property
     def agents(self):
-        ''' Get a list of agents for each position in a the game
-
-        Returns:
-            agents (list): A list of agents
-
-        Note: Each agent should be just like RL agent with step and eval_step
-              functioning well.
-        '''
-        return self.rule_agents
+        pass
 
     @property
     def use_raw(self):
-        ''' Indicate whether use raw state and action
-
-        Returns:
-            use_raw (boolean): True if using raw state and action
-        '''
-        return True
+        pass

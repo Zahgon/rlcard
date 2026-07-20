@@ -1,16 +1,9 @@
-'''
-    File name: gin_rummy/dealer.py
-    Author: William Hale
-    Date created: 2/12/2020
-'''
 
 from .player import GinRummyPlayer
 from .utils import utils as utils
 
 
 class GinRummyDealer:
-    ''' Initialize a GinRummy dealer class
-    '''
     def __init__(self, np_random):
         ''' Empty discard_pile, set shuffled_deck, set stock_pile
         '''

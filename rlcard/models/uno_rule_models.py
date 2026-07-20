@@ -1,5 +1,3 @@
-''' UNO rule models
-'''
 
 import numpy as np
 
@@ -7,8 +5,6 @@ import rlcard
 from rlcard.models.model import Model
 
 class UNORuleAgentV1(object):
-    ''' UNO Rule agent version 1
-    '''
 
     def __init__(self):
         self.use_raw = True
@@ -32,14 +28,12 @@ class UNORuleAgentV1(object):
 
         hand = state['hand']
 
-        # If we have wild-4 simply play it and choose color that appears most in hand
         for action in legal_actions:
             if action.split('-')[1] == 'wild_draw_4':
                 color_nums = self.count_colors(self.filter_wild(hand))
                 action = max(color_nums, key=color_nums.get) + '-wild_draw_4'
                 return action
 
-        # Without wild-4, we randomly choose one
         action = np.random.choice(self.filter_wild(legal_actions))
         return action
 
@@ -88,8 +82,6 @@ class UNORuleAgentV1(object):
         return color_nums
 
 class UNORuleModelV1(Model):
-    ''' UNO Rule Model version 1
-    '''
 
     def __init__(self):
         ''' Load pretrained model
@@ -101,24 +93,11 @@ class UNORuleModelV1(Model):
 
     @property
     def agents(self):
-        ''' Get a list of agents for each position in a the game
-
-        Returns:
-            agents (list): A list of agents
-
-        Note: Each agent should be just like RL agent with step and eval_step
-              functioning well.
-        '''
-        return self.rule_agents
+        pass
 
     @property
     def use_raw(self):
-        ''' Indicate whether use raw state and action
-
-        Returns:
-            use_raw (boolean): True if using raw state and action
-        '''
-        return True
+        pass
 
 
 

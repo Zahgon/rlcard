@@ -12,11 +12,7 @@ class NFSPAgentPettingZoo(NFSPAgent):
         return super().eval_step(wrap_state(state))
 
     def feed(self, ts):
-        state, action, reward, next_state, done = tuple(ts)
-        state = wrap_state(state)
-        next_state = wrap_state(next_state)
-        ts = (state, action, reward, next_state, done)
-        return super().feed(ts)
+        pass
 
 
 class DQNAgentPettingZoo(DQNAgent):
@@ -27,11 +23,7 @@ class DQNAgentPettingZoo(DQNAgent):
         return super().eval_step(wrap_state(state))
 
     def feed(self, ts):
-        state, action, reward, next_state, done = tuple(ts)
-        state = wrap_state(state)
-        next_state = wrap_state(next_state)
-        ts = (state, action, reward, next_state, done)
-        return super().feed(ts)
+        pass
 
 
 class RandomAgentPettingZoo(RandomAgent):

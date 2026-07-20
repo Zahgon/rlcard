@@ -1,5 +1,3 @@
-''' Doudizhu utils
-'''
 import os
 import json
 from collections import OrderedDict
@@ -8,7 +6,6 @@ import collections
 
 import rlcard
 
-# Read required docs
 ROOT_PATH = rlcard.__path__[0]
 
 if not os.path.isfile(os.path.join(ROOT_PATH, 'games/doudizhu/jsondata/action_space.txt')) \
@@ -18,7 +15,6 @@ if not os.path.isfile(os.path.join(ROOT_PATH, 'games/doudizhu/jsondata/action_sp
     with zipfile.ZipFile(os.path.join(ROOT_PATH, 'games/doudizhu/jsondata.zip'),"r") as zip_ref:
         zip_ref.extractall(os.path.join(ROOT_PATH, 'games/doudizhu/'))
 
-# Action space
 action_space_path = os.path.join(ROOT_PATH, 'games/doudizhu/jsondata/action_space.txt')
 with open(action_space_path, 'r') as f:
     ID_2_ACTION = f.readline().strip().split()
@@ -26,24 +22,20 @@ with open(action_space_path, 'r') as f:
     for i, action in enumerate(ID_2_ACTION):
         ACTION_2_ID[action] = i
 
-# a map of card to its type. Also return both dict and list to accelerate
 card_type_path = os.path.join(ROOT_PATH, 'games/doudizhu/jsondata/card_type.json')
 with open(card_type_path, 'r') as f:
     data = json.load(f, object_pairs_hook=OrderedDict)
     CARD_TYPE = (data, list(data), set(data))
 
-# a map of type to its cards
 type_card_path = os.path.join(ROOT_PATH, 'games/doudizhu/jsondata/type_card.json')
 with open(type_card_path, 'r') as f:
     TYPE_CARD = json.load(f, object_pairs_hook=OrderedDict)
 
-# rank list of solo character of cards
 CARD_RANK_STR = ['3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K',
                  'A', '2', 'B', 'R']
 CARD_RANK_STR_INDEX = {'3': 0, '4': 1, '5': 2, '6': 3, '7': 4,
             '8': 5, '9': 6, 'T': 7, 'J': 8, 'Q': 9,
             'K': 10, 'A': 11, '2': 12, 'B': 13, 'R': 14}
-# rank list
 CARD_RANK = ['3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K',
              'A', '2', 'BJ', 'RJ']
 
@@ -104,34 +96,23 @@ def get_landlord_score(current_hand):
     '''
     score_map = {'A': 1, '2': 2, 'B': 3, 'R': 4}
     score = 0
-    # rocket
     if current_hand[-2:] == 'BR':
         score += 8
         current_hand = current_hand[:-2]
     length = len(current_hand)
     i = 0
     while i < length:
-        # bomb
         if i <= (length - 4) and current_hand[i] == current_hand[i+3]:
             score += 6
             i += 4
             continue
-        # 2, Black Joker, Red Joker
         if current_hand[i] in score_map:
             score += score_map[current_hand[i]]
         i += 1
     return score
 
 def cards2str_with_suit(cards):
-    ''' Get the corresponding string representation of cards with suit
-
-    Args:
-        cards (list): list of Card objects
-
-    Returns:
-        string: string representation of cards
-    '''
-    return ' '.join([card.suit+card.rank for card in cards])
+    pass
 
 def cards2str(cards):
     ''' Get the corresponding string representation of cards
@@ -165,10 +146,6 @@ def contains_cards(candidate, target):
     Returns:
         boolean
     '''
-    # In normal cases, most continuous calls of this function
-    #   will test different targets against the same candidate.
-    # So the cached counts of each card in candidate can speed up
-    #   the comparison for following tests if candidate keeps the same.
     if not _local_objs.cached_candidate_cards or _local_objs.cached_candidate_cards != candidate:
         _local_objs.cached_candidate_cards = candidate
         cards_dict = collections.defaultdict(int)
@@ -236,7 +213,6 @@ def get_gt_cards(player, greater_player):
     Note:
         1. return value contains 'pass'
     '''
-    # add 'pass' to legal actions
     gt_cards = ['pass']
     current_hand = cards2str(player.current_hand)
     target_cards = greater_player.played_cards
@@ -255,8 +231,6 @@ def get_gt_cards(player, greater_player):
         for can_weight, cards_list in candidate.items():
             if int(can_weight) > int(weight):
                 for cards in cards_list:
-                    # TODO: improve efficiency
                     if cards not in gt_cards and contains_cards(current_hand, cards):
-                        # if self.contains_cards(current_hand, cards):
                         gt_cards.append(cards)
     return gt_cards

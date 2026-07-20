@@ -1,8 +1,3 @@
-'''
-    File name: gin_rummy/thinker.py
-    Author: William Hale
-    Date created: 3/28/2020
-'''
 
 from typing import List
 
@@ -17,7 +12,6 @@ class Thinker(object):
     def __init__(self, hand: List[Card]):
         self.hand = hand
 
-    # simple thinking
     def get_meld_piles_with_discard_card(self, discard_card: Card) -> List[List[Card]]:
         next_hand = self.hand + [discard_card]
         meld_clusters = melding.get_meld_clusters(hand=next_hand)

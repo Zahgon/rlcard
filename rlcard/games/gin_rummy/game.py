@@ -1,8 +1,3 @@
-'''
-    File name: gin_rummy/game.py
-    Author: William Hale
-    Date created: 2/12/2020
-'''
 
 import numpy as np
 
@@ -15,8 +10,6 @@ from .utils.action_event import *
 
 
 class GinRummyGame:
-    ''' Game class. This class will interact with outer environment.
-    '''
 
     def __init__(self, allow_step_back=False):
         '''Initialize the class GinRummyGame
@@ -84,9 +77,7 @@ class GinRummyGame:
         return 2
 
     def get_num_actions(self):
-        ''' Return the number of possible actions in the game
-        '''
-        return ActionEvent.get_num_actions()
+        pass
 
     def get_player_id(self):
         ''' Return the current player that will take actions soon

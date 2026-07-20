@@ -1,8 +1,3 @@
-'''
-    File name: bridge/game.py
-    Author: William Hale
-    Date created: 11/25/2021
-'''
 
 from typing import List
 
@@ -14,8 +9,6 @@ from .utils.action_event import ActionEvent, CallActionEvent, PlayCardAction
 
 
 class BridgeGame:
-    ''' Game class. This class will interact with outer environment.
-    '''
 
     def __init__(self, allow_step_back=False):
         '''Initialize the class BridgeGame
@@ -61,9 +54,7 @@ class BridgeGame:
 
     @staticmethod
     def get_num_actions() -> int:
-        ''' Return the number of possible actions in the game
-        '''
-        return ActionEvent.get_num_actions()
+        pass
 
     def get_player_id(self):
         ''' Return the current player that will take actions soon

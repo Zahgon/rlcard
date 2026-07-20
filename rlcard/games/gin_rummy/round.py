@@ -1,8 +1,3 @@
-'''
-    File name: gin_rummy/round.py
-    Author: William Hale
-    Date created: 2/12/2020
-'''
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .utils.move import GinRummyMove
@@ -70,8 +65,6 @@ class GinRummyRound:
         return None if current_player_id is None else self.players[current_player_id]
 
     def draw_card(self, action: DrawCardAction):
-        # when current_player takes DrawCardAction step, the move is recorded and executed
-        # current_player keeps turn
         current_player = self.players[self.current_player_id]
         if not len(current_player.hand) == 10:
             raise GinRummyProgramError("len(current_player.hand) is {}: should be 10.".format(len(current_player.hand)))
@@ -80,9 +73,6 @@ class GinRummyRound:
         current_player.add_card_to_hand(card=card)
 
     def pick_up_discard(self, action: PickUpDiscardAction):
-        # when current_player takes PickUpDiscardAction step, the move is recorded and executed
-        # opponent knows that the card is in current_player hand
-        # current_player keeps turn
         current_player = self.players[self.current_player_id]
         if not len(current_player.hand) == 10:
             raise GinRummyProgramError("len(current_player.hand) is {}: should be 10.".format(len(current_player.hand)))
@@ -92,8 +82,6 @@ class GinRummyRound:
         current_player.known_cards.append(card)
 
     def declare_dead_hand(self, action: DeclareDeadHandAction):
-        # when current_player takes DeclareDeadHandAction step, the move is recorded and executed
-        # north becomes current_player to score his hand
         current_player = self.players[self.current_player_id]
         self.move_sheet.append(DeclareDeadHandMove(current_player, action))
         self.going_out_action = action
@@ -103,9 +91,6 @@ class GinRummyRound:
         self.current_player_id = 0
 
     def discard(self, action: DiscardAction):
-        # when current_player takes DiscardAction step, the move is recorded and executed
-        # opponent knows that the card is no longer in current_player hand
-        # current_player loses his turn and the opponent becomes the current player
         current_player = self.players[self.current_player_id]
         if not len(current_player.hand) == 11:
             raise GinRummyProgramError("len(current_player.hand) is {}: should be 11.".format(len(current_player.hand)))
@@ -118,9 +103,6 @@ class GinRummyRound:
         self.current_player_id = (self.current_player_id + 1) % 2
 
     def knock(self, action: KnockAction):
-        # when current_player takes KnockAction step, the move is recorded and executed
-        # opponent knows that the card is no longer in current_player hand
-        # north becomes current_player to score his hand
         current_player = self.players[self.current_player_id]
         self.move_sheet.append(KnockMove(current_player, action))
         self.going_out_action = action
@@ -134,9 +116,6 @@ class GinRummyRound:
         self.current_player_id = 0
 
     def gin(self, action: GinAction, going_out_deadwood_count: int):
-        # when current_player takes GinAction step, the move is recorded and executed
-        # opponent knows that the card is no longer in current_player hand
-        # north becomes current_player to score his hand
         current_player = self.players[self.current_player_id]
         self.move_sheet.append(GinMove(current_player, action))
         self.going_out_action = action
@@ -151,8 +130,6 @@ class GinRummyRound:
         self.current_player_id = 0
 
     def score_player_0(self, action: ScoreNorthPlayerAction):
-        # when current_player takes ScoreNorthPlayerAction step, the move is recorded and executed
-        # south becomes current player
         if not self.current_player_id == 0:
             raise GinRummyProgramError("current_player_id is {}: should be 0.".format(self.current_player_id))
         current_player = self.get_current_player()
@@ -166,9 +143,6 @@ class GinRummyRound:
         self.current_player_id = 1
 
     def score_player_1(self, action: ScoreSouthPlayerAction):
-        # when current_player takes ScoreSouthPlayerAction step, the move is recorded and executed
-        # south remains current player
-        # the round is over
         if not self.current_player_id == 1:
             raise GinRummyProgramError("current_player_id is {}: should be 1.".format(self.current_player_id))
         current_player = self.get_current_player()

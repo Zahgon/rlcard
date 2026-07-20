@@ -28,27 +28,20 @@ class UnoGame:
                 (dict): The first state in one game
                 (int): Current player's id
         '''
-        # Initalize payoffs
         self.payoffs = [0 for _ in range(self.num_players)]
 
-        # Initialize a dealer that can deal cards
         self.dealer = Dealer(self.np_random)
 
-        # Initialize four players to play the game
         self.players = [Player(i, self.np_random) for i in range(self.num_players)]
 
-        # Deal 7 cards to each player to prepare for the game
         for player in self.players:
             self.dealer.deal_cards(player, 7)
 
-        # Initialize a Round
         self.round = Round(self.dealer, self.num_players, self.np_random)
 
-        # flip and perfrom top card
         top_card = self.round.flip_top_card()
         self.round.perform_top_card(self.players, top_card)
 
-        # Save the hisory for stepping back to the last state.
         self.history = []
 
         player_id = self.round.current_player
@@ -69,7 +62,6 @@ class UnoGame:
         '''
 
         if self.allow_step_back:
-            # First snapshot the current state
             his_dealer = deepcopy(self.dealer)
             his_round = deepcopy(self.round)
             his_players = deepcopy(self.players)
@@ -81,15 +73,7 @@ class UnoGame:
         return state, player_id
 
     def step_back(self):
-        ''' Return to the previous state of the game
-
-        Returns:
-            (bool): True if the game steps back successfully
-        '''
-        if not self.history:
-            return False
-        self.dealer, self.players, self.round = self.history.pop()
-        return True
+        pass
 
     def get_state(self, player_id):
         ''' Return player's state
@@ -136,12 +120,7 @@ class UnoGame:
 
     @staticmethod
     def get_num_actions():
-        ''' Return the number of applicable actions
-
-        Returns:
-            (int): The number of actions. There are 61 actions
-        '''
-        return 61
+        pass
 
     def get_player_id(self):
         ''' Return the current player's id

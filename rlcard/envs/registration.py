@@ -1,14 +1,11 @@
 import importlib
 
-# Default Config
 DEFAULT_CONFIG = {
         'allow_step_back': False,
         'seed': None,
         }
 
 class EnvSpec(object):
-    ''' A specification for a particular instance of the environment.
-    '''
 
     def __init__(self, env_id, entry_point=None):
         ''' Initilize
@@ -32,8 +29,6 @@ class EnvSpec(object):
         return env
 
 class EnvRegistry(object):
-    ''' Register an environment (game) by ID
-    '''
 
     def __init__(self):
         ''' Initilize
@@ -62,7 +57,6 @@ class EnvRegistry(object):
             raise ValueError('Cannot find env_id: {}'.format(env_id))
         return self.env_specs[env_id].make(config)
 
-# Have a global registry
 registry = EnvRegistry()
 
 def register(env_id, entry_point):

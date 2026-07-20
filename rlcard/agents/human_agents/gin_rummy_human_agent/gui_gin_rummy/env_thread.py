@@ -1,11 +1,4 @@
-'''
-    Project: Gui Gin Rummy
-    File name: env_thread.py
-    Author: William Hale
-    Date created: 3/14/2020
-'''
 
-# from __future__ import annotations
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .game_canvas import GameCanvas
@@ -38,20 +31,14 @@ class EnvThread(threading.Thread):
 
     @property
     def moves(self) -> List[GinRummyMove]:
-        return self.gin_rummy_env.game.round.move_sheet
+        pass
 
-    #
-    #   Producer of action_ids
-    #
 
     def is_action_id_available(self) -> bool:
         move_sheet = self.gin_rummy_env.game.round.move_sheet
         move_count = len(move_sheet)
         return self.mark < move_count
 
-    #
-    #   Consumer of action_ids
-    #
 
     def get_waiting_player_id(self) -> int or None:  # FIXME: rework this
         waiting_player_id = None  # type: int or None
@@ -62,36 +49,23 @@ class EnvThread(threading.Thread):
                     waiting_player_id = player_id
         return waiting_player_id
 
-    #
-    #   Thread methods
-    #
 
     def stop(self):
-        self.is_stopped = True
-        south_agent = self.gin_rummy_env.agents[1]
-        if isinstance(south_agent, HumanAgent):
-            if south_agent.is_choosing_action_id:
-                raw_legal_actions = south_agent.state['raw_legal_actions']
-                if raw_legal_actions:
-                    south_agent.chosen_action_id = raw_legal_actions[0]
-            self.gin_rummy_env.game.round.is_over = True
+        pass
 
     def run(self) -> None:
         self.game_canvas.game_canvas_updater.apply_canvas_updates()
         _, payoffs = self.gin_rummy_env.run(is_training=False)
 
-        # determine whether game completed all moves
         is_game_complete = False
         move_sheet = self.gin_rummy_env.game.round.move_sheet
         if move_sheet and isinstance(move_sheet[-1], ScoreSouthMove):
             is_game_complete = True
 
-        # handle case where moves still need to be processed
         if is_game_complete:
             while not self.is_stopped and self.gin_rummy_env.game.round.is_over and self.mark < len(self.moves):
                 time.sleep(0.1)  # FIXME: provide a timeout ???
 
-        # on normal completion: update score_pads
         if not self.is_stopped and self.gin_rummy_env.game.round.is_over and is_game_complete:
             status_messaging.show_game_over_message(game=self.gin_rummy_env.game, game_canvas=self.game_canvas)
             for player_id in range(2):  # update score_pad for both players

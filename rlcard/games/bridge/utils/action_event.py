@@ -1,20 +1,6 @@
-'''
-    File name: bridge/utils/action_event.py
-    Author: William Hale
-    Date created: 11/25/2021
-'''
 
 from .bridge_card import BridgeCard
 
-# ====================================
-# Action_ids:
-#       0 -> no_bid_action_id
-#       1 to 35 -> bid_action_id (bid amount by suit or NT)
-#       36 -> pass_action_id
-#       37 -> dbl_action_id
-#       38 -> rdbl_action_id
-#       39 to 90 -> play_card_action_id
-# ====================================
 
 
 class ActionEvent(object):  # Interface
@@ -57,9 +43,7 @@ class ActionEvent(object):  # Interface
 
     @staticmethod
     def get_num_actions():
-        ''' Return the number of possible actions in the game
-        '''
-        return 1 + 35 + 3 + 52  # no_bid, 35 bids, pass, dbl, rdl, 52 play_card
+        pass
 
 
 class CallActionEvent(ActionEvent):  # Interface

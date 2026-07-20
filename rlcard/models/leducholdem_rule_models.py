@@ -1,11 +1,7 @@
-''' Leduc Hold 'em rule model
-'''
 import rlcard
 from rlcard.models.model import Model
 
 class LeducHoldemRuleAgentV1(object):
-    ''' Leduc Hold 'em Rule agent version 1
-    '''
     def __init__(self):
         self.use_raw = True
 
@@ -19,7 +15,6 @@ class LeducHoldemRuleAgentV1(object):
             action (str): Predicted action
         '''
         legal_actions = state['raw_legal_actions']
-        # Aggressively play 'raise' and 'call'
         if 'raise' in legal_actions:
             return 'raise'
         if 'call' in legal_actions:
@@ -35,8 +30,6 @@ class LeducHoldemRuleAgentV1(object):
         return self.step(state), []
 
 class LeducHoldemRuleAgentV2(object):
-    ''' Leduc Hold 'em Rule agent version 2
-    '''
     def __init__(self):
         self.use_raw = True
 
@@ -54,13 +47,6 @@ class LeducHoldemRuleAgentV2(object):
         hand = state['hand']
         public_card = state['public_card']
         action = 'fold'
-        # When having only 2 hand cards at the game start, choose fold to drop terrible cards:
-        # Acceptable hand cards:
-        # Pairs
-        # AK, AQ, AJ, AT
-        # A9s, A8s, ... A2s(s means flush)
-        # KQ, KJ, QJ, JT
-        # Fold all hand types except those mentioned above to save money
         if public_card:
             if public_card[1] == hand[1]:
                 action = 'raise'
@@ -74,7 +60,6 @@ class LeducHoldemRuleAgentV2(object):
             else:
                 action = 'fold'
 
-        #return action
         if action in legal_actions:
             return action
         else:
@@ -88,8 +73,6 @@ class LeducHoldemRuleAgentV2(object):
                 return action
 
 class LeducHoldemRuleModelV1(Model):
-    ''' Leduc holdem Rule Model version 1
-    '''
 
     def __init__(self):
         ''' Load pretrained model
@@ -100,19 +83,9 @@ class LeducHoldemRuleModelV1(Model):
 
     @property
     def agents(self):
-        ''' Get a list of agents for each position in a the game
-
-        Returns:
-            agents (list): A list of agents
-
-        Note: Each agent should be just like RL agent with step and eval_step
-              functioning well.
-        '''
-        return self.rule_agents
+        pass
 
 class LeducHoldemRuleModelV2(Model):
-    ''' Leduc holdem Rule Model version 2
-    '''
 
     def __init__(self):
         ''' Load pretrained model
@@ -123,12 +96,4 @@ class LeducHoldemRuleModelV2(Model):
 
     @property
     def agents(self):
-        ''' Get a list of agents for each position in a the game
-
-        Returns:
-            agents (list): A list of agents
-
-        Note: Each agent should be just like RL agent with step and eval_step
-              functioning well.
-        '''
-        return self.rule_agents
+        pass

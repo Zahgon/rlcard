@@ -12,8 +12,6 @@ DEFAULT_GAME_CONFIG = {
         }
 
 class LimitholdemEnv(Env):
-    ''' Limitholdem Environment
-    '''
 
     def __init__(self, config):
         ''' Initialize the Limitholdem environment
@@ -96,15 +94,4 @@ class LimitholdemEnv(Env):
         return self.actions[action_id]
 
     def get_perfect_information(self):
-        ''' Get the perfect information of the current state
-
-        Returns:
-            (dict): A dictionary of all the perfect information of the current state
-        '''
-        state = {}
-        state['chips'] = [self.game.players[i].in_chips for i in range(self.num_players)]
-        state['public_card'] = [c.get_index() for c in self.game.public_cards] if self.game.public_cards else None
-        state['hand_cards'] = [[c.get_index() for c in self.game.players[i].hand] for i in range(self.num_players)]
-        state['current_player'] = self.game.game_pointer
-        state['legal_actions'] = self.game.get_legal_actions()
-        return state
+        pass
